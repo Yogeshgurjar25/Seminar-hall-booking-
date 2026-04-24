@@ -29,10 +29,18 @@
   </div>
 
   <!-- Auth Buttons -->
-  <div class="flex items-center gap-4">
+  <!-- Auth Buttons -->
+<div class="flex items-center gap-4">
+  {% if session.get('user_id') %}
+    <a href="/dashboard" class="px-5 py-2 text-gray-600 text-base font-medium hover:text-blue-900 transition-colors">Dashboard</a>
+    <form method="POST" action="/logout" style="margin:0;">
+      <button type="submit" class="px-6 py-2.5 bg-blue-900 text-white rounded text-base font-semibold hover:bg-blue-800 transition-colors">Logout</button>
+    </form>
+  {% else %}
     <a href="/login" class="px-5 py-2 text-gray-600 text-base font-medium hover:text-blue-900 transition-colors">Login</a>
     <a href="/register" class="px-6 py-2.5 bg-blue-900 text-white rounded text-base font-semibold hover:bg-blue-800 transition-colors">Register</a>
-  </div>
+  {% endif %}
+</div>
 
 </div>
 </nav>

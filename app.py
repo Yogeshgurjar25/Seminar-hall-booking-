@@ -92,9 +92,24 @@ def home():
 def about():
     return render_template("about.html")
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template("contact.html")
+    success = None
+    if request.method == 'POST':
+        name    = request.form.get('name', '').strip()
+        email   = request.form.get('email', '').strip()
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
+
+        if name and email and subject and message:
+            send_email(
+                to=os.environ.get('MAIL_USERNAME'),
+                subject=f"[Contact Form] {subject} — from {name}",
+                body=f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+            )
+            success = "Message sent successfully! We'll get back to you soon."
+
+    return render_template("contact.html", success=success)
 
 # ================================================================
 #  REGISTER

@@ -50,17 +50,22 @@
 
   <!-- Form -->
   <div class="card">
-    <h2>Send a Message</h2>
+  <h2>Send a Message</h2>
 
-    <form class="form" method="POST" action="/contact">
-      <input type="text" name="name" placeholder="Your Name" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="text" name="subject" placeholder="Subject" required>
-      <textarea name="message" placeholder="Message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
+  {% if success %}
+  <p style="background:#d4edda; color:#155724; padding:10px 14px; border-radius:6px; margin-bottom:16px; font-size:14px;">
+    ✅ {{ success }}
+  </p>
+  {% endif %}
 
-  </div>
+  <form class="form" method="POST" action="/contact">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="text" name="subject" placeholder="Subject" required>
+    <textarea name="message" placeholder="Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</div>
 
 </div>
 
