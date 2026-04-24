@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Users — CDGI Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-container": "#0056b3",
+            "on-secondary-container": "#475a7f",
+            "surface-container": "#edeeef",
+            "inverse-surface": "#2e3132",
+            "secondary": "#4c5e84",
+            "primary": "#003f87",
+            "surface-container-high": "#e7e8e9",
+            "on-background": "#191c1d",
+            "surface-container-low": "#f3f4f5",
+            "on-tertiary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-container": "#bbd0ff",
+            "surface-container-highest": "#e1e3e4",
+            "outline": "#727784",
+            "surface-variant": "#e1e3e4",
+            "surface-bright": "#f8f9fa",
+            "on-surface": "#191c1d",
+            "on-error-container": "#93000a",
+            "surface": "#f8f9fa",
+            "secondary-container": "#bfd2fd",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#424752",
+            "error": "#ba1a1a",
+            "background": "#f8f9fa",
+            "inverse-primary": "#acc7ff",
+            "surface-tint": "#115cb9",
+            "outline-variant": "#c2c6d4",
+            "inverse-on-surface": "#f0f1f2",
+            "primary-fixed": "#d7e2ff",
+            "primary-fixed-dim": "#acc7ff",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f4f6fb; min-height: 100vh; display: flex; flex-direction: column; }
+    .layout { display: flex; align-items: flex-start; flex: 1; }
+    .sidebar { width: 220px; background: white; padding: 20px; min-height: calc(100vh - 73px); border-right: 1px solid #eee; flex-shrink: 0; }
+    .sidebar-item { display: block; padding: 10px; margin-bottom: 10px; color: #555; text-decoration: none; border-radius: 6px; font-size: 18px; }
+    .sidebar-item:hover { background: #f1f5f9; }
+    .sidebar-item.active { background: #e0f2fe; color: #1e3a5f; border-left: 4px solid #1e3a5f; padding-left: 8px; font-weight: 500; }
+    .admin-main { flex: 1; min-width: 0; }
+    footer { text-align: center; padding: 15px; background: white; margin-top: auto; border-top: 1px solid #e5e7eb; font-size: 14px; color: #555; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+
+  <!-- NAVBAR -->
+  <header class="w-full sticky top-0 z-50 flex items-center justify-between px-8 py-4 shadow-md" style="background:#1e3a5f;">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1;">account_balance</span>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white leading-tight">Admin Central</h1>
+        <p class="text-[10px] uppercase tracking-widest text-blue-200 font-bold">CDGI BOOKIT</p>
+      </div>
+    </div>
+    <form action="/logout" method="POST">
+      <button type="submit" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors border border-white/20">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Logout
+      </button>
+    </form>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <a href="/admin"          class="sidebar-item">🏠 Dashboard</a>
+      <a href="/admin_bookings" class="sidebar-item">📋 Bookings</a>
+      <a href="/admin_halls"    class="sidebar-item">🏛️ Halls</a>
+      <a href="/admin_users"    class="sidebar-item active">👥 Users</a>
+    </div>
+
+    <!-- ADMIN MAIN -->
+    <div class="admin-main">
+
+      <!-- Top App Bar -->
+      <header class="sticky top-0 z-40 bg-[#f8f9fa] flex items-center justify-between px-8 py-4 shadow-sm border-b border-surface-container">
+        <div class="flex flex-col">
+          <h2 class="text-2xl font-headline font-extrabold text-primary tracking-tight">Registered Users</h2>
+          <p class="text-sm text-on-surface-variant font-medium">All faculty and staff accounts</p>
+        </div>
+        <div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-bold">
+            {% if admin_name %}{{ admin_name[:2] | upper }}{% else %}AD{% endif %}
+          </div>
+          <div class="hidden lg:block">
+            <p class="text-xs font-bold text-on-surface">{{ admin_name }}</p>
+            <p class="text-[10px] text-on-surface-variant">Administrator</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="p-8 space-y-8">
+
+        <!-- STATS CARDS -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <!-- Total Users -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-primary hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">group</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Total Users</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ users | length }}</h3>
+          </div>
+
+          <!-- Active -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-[#2e7d32] hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-[#2e7d32]">
+                <span class="material-symbols-outlined">verified_user</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Active</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ users | selectattr('is_active', 'equalto', 1) | list | length }}</h3>
+          </div>
+
+          <!-- Inactive -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-error hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center text-error">
+                <span class="material-symbols-outlined">person_off</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Inactive</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ users | selectattr('is_active', 'equalto', 0) | list | length }}</h3>
+          </div>
+
+        </section>
+
+        <!-- USERS TABLE -->
+        <section class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden">
+
+          <div class="px-6 py-5 border-b border-surface-container flex items-center justify-between">
+            <h3 class="text-lg font-headline font-bold">User Directory</h3>
+            <span class="text-xs bg-surface-container-high px-4 py-2 rounded-lg font-bold text-secondary" id="rowCount">
+              {{ users | length }} user{% if users | length != 1 %}s{% endif %}
+            </span>
+          </div>
+
+          <!-- Search bar -->
+          <div class="px-6 py-4 border-b border-surface-container flex flex-wrap items-center gap-2">
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size:17px;">search</span>
+              <input type="text" placeholder="Search name, email, department..."
+                oninput="searchTable(this.value)"
+                class="pl-8 pr-4 py-1.5 text-xs border border-surface-container-high rounded-lg bg-surface-container focus:outline-none focus:border-primary w-64">
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" id="usersTable">
+              <thead>
+                <tr class="bg-surface-container-low">
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">S. No</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Name</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Phone</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Department</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Joined</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container">
+                {% for user in users %}
+                <tr class="hover:bg-surface-bright transition-colors"
+                    data-search="{{ user.name }} {{ user.email }} {{ user.department }} {{ user.phone }}">
+
+                  <td class="px-6 py-4 text-sm text-on-surface-variant font-bold row-num"></td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary text-xs font-bold flex-shrink-0">
+                        {{ user.name[:2] | upper }}
+                      </div>
+                      <span class="text-sm font-bold text-on-surface">{{ user.name }}</span>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4 text-sm text-on-surface-variant">{{ user.email }}</td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-on-surface-variant" style="font-size:15px;">phone</span>
+                      <span class="text-sm">{{ user.phone }}</span>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <span class="text-xs bg-secondary-container text-on-secondary-container font-bold px-3 py-1 rounded-full">{{ user.department }}</span>
+                  </td>
+
+                  <td class="px-6 py-4 text-sm text-on-surface-variant">
+                    {{ user.created_at.strftime('%d %b %Y') if user.created_at and user.created_at.strftime is defined else user.created_at }}
+                  </td>
+
+                  <td class="px-6 py-4">
+                    {% if user.is_active %}
+                      <span class="bg-green-50 text-[#2e7d32] text-[10px] font-bold px-3 py-1 rounded-full border border-green-100">ACTIVE</span>
+                    {% else %}
+                      <span class="bg-red-50 text-error text-[10px] font-bold px-3 py-1 rounded-full border border-red-100">INACTIVE</span>
+                    {% endif %}
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <form action="/toggle_user/{{ user.id }}" method="POST">
+                      <button type="submit"
+                              class="text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors
+                              {% if user.is_active %}border-error text-error hover:bg-error hover:text-white{% else %}border-[#2e7d32] text-[#2e7d32] hover:bg-[#2e7d32] hover:text-white{% endif %}">
+                        {% if user.is_active %}Deactivate{% else %}Activate{% endif %}
+                      </button>
+                    </form>
+                  </td>
+
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="7" class="px-6 py-10 text-center text-on-surface-variant text-sm">
+                    No users registered yet.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+      </div><!-- /page content -->
+
+      <footer>CDGI Seminar Hall Booking Portal</footer>
+
+    </div><!-- /admin-main -->
+  </div><!-- /layout -->
+
+  <script>
+    function searchTable(val) {
+      const query = val.toLowerCase().trim();
+      const rows = document.querySelectorAll('#usersTable tbody tr[data-search]');
+      let visible = 0;
+      rows.forEach(row => {
+        const match = query === '' || row.dataset.search.toLowerCase().includes(query);
+        row.style.display = match ? '' : 'none';
+        if (match) {
+          visible++;
+          row.querySelector('.row-num').textContent = visible;
+        }
+      });
+      document.getElementById('rowCount').textContent = visible + ' user' + (visible !== 1 ? 's' : '');
+    }
+
+    // Init numbering on page load
+    searchTable('');
+  </script>
+
+</body>
+</html>

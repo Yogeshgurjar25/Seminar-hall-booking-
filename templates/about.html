@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — CDGI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/about" class="active">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/login">Login</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>About Us</h1>
+  <p>A simple online portal to book seminar halls at CDGI.</p>
+</div>
+
+<!-- Content -->
+<div class="container">
+
+  <div class="card">
+    <h2>About the Project</h2>
+    <p>
+      The CDGI Seminar Hall Booking Portal is a web-based application.
+      It replaces the manual booking process with a fast and easy online system.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Key Features</h2>
+    <div class="features">
+      <div class="feature"><div class="icon">📅</div><p>Real-time availability</p></div>
+      <div class="feature"><div class="icon">📝</div><p>Online booking requests</p></div>
+      <div class="feature"><div class="icon">✅</div><p>Admin approval system</p></div>
+      <div class="feature"><div class="icon">🔔</div><p>Instant notifications</p></div>
+      <div class="feature"><div class="icon">📊</div><p>Booking history</p></div>
+      <div class="feature"><div class="icon">🔒</div><p>Role-based access</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Our Team</h2>
+    <div class="team-grid">
+      <div class="member">
+        <div class="avatar">SG</div>
+        <div class="name">Shreya Geete</div>
+      </div>
+      <div class="member">
+        <div class="avatar">SS</div>
+        <div class="name">Shruti Sharma</div>
+      </div>
+      <div class="member">
+        <div class="avatar">VP</div>
+        <div class="name">Vedika Purohit</div>
+      </div>
+      <div class="member">
+        <div class="avatar">YP</div>
+        <div class="name">Yogesh Patware</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  CDGI - Seminar Hall Booking Portal
+</footer>
+
+</body>
+</html>

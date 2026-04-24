@@ -1,0 +1,6 @@
+flask
+flask-mysqldb
+flask-mail
+werkzeug
+mysqlclient
+python-dotenv

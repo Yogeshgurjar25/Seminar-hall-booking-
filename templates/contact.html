@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — CDGI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact" class="active">Contact</a>
+    <a href="/login">Login</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>Contact Us</h1>
+  <p>Get in touch with us for any queries or booking help.</p>
+</div>
+
+<div class="container">
+
+  <!-- Contact Info -->
+  <div class="card">
+    <h2>Contact Information</h2>
+
+    <div class="features">
+      <div class="feature">📧 admin@cdgi.edu.in</div>
+      <div class="feature">📞 +91 XXXXXXXXXX</div>
+      <div class="feature">⏰ Mon–Sat, 9am–4pm</div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="card">
+    <h2>Send a Message</h2>
+
+    <form class="form" method="POST" action="/contact">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="text" name="subject" placeholder="Subject" required>
+      <textarea name="message" placeholder="Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+
+  </div>
+
+</div>
+
+<footer>
+CDGI Seminar Hall Booking Portal
+</footer>
+
+</body>
+</html>

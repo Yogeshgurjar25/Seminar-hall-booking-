@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Hall — CDGI BookIt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6fb;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* ── NAVBAR ── */
+   /* ── NAVBAR ── */
+nav {
+  background: #1e3a5f;
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  color: white;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+.logo span {
+  color: #60a5fa;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.8);
+  margin-left: 16px;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: white;
+}
+
+/* 🔥 IMPORTANT FIX */
+.logout-btn {
+  background: #e74c3c;
+  padding: 8px 20px;
+  border-radius: 6px;
+  color: white !important;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+    /* ── LAYOUT ── */
+    .layout { display: flex; flex: 1; }
+
+    /* ── SIDEBAR ── */
+   .sidebar {
+    width: 220px;
+    background: white;
+    padding: 20px;
+    min-height: calc(100vh - 70px);
+    border-right: 1px solid #eee;
+}
+
+.sidebar-item {
+    display: block;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: #555;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.sidebar-item:hover {
+    background: #f1f5f9;
+}
+
+.sidebar-item.active {
+    background: #e0f2fe;
+    color: #1e3a5f;
+    border-left: 4px solid #1e3a5f;
+    padding-left: 8px;
+    font-weight: 500;
+} /* 👈 consistency */
+
+    /* ── MAIN ── */
+    .main {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+    .page-title { font-size: 22px; font-weight: 700; color: #1e3a5f; text-align: center; width: 100%; max-width: 680px; }
+    .page-sub { color: #94a3b8; font-size: 13px; margin-top: 4px; margin-bottom: 28px; text-align: center; width: 100%; max-width: 680px; }
+    
+    /* Error box */
+    .error-box {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── BOOKING CARD ── */
+    .booking-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(30,58,95,0.12);
+      width: 100%;
+      max-width: 680px;
+    }
+
+    /* FORM */
+    .form-side {
+      padding: 36px 40px;
+    }
+
+    .form-heading {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1e3a5f;
+      letter-spacing: -0.5px;
+      margin-bottom: 28px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .form-section { margin-bottom: 22px; }
+
+    /* Venue select */
+    .select-wrap { position: relative; }
+    .select-wrap select {
+      width: 100%;
+      height: 50px;
+      padding: 0 40px 0 16px;
+      background: #f4f6fb;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: #1e293b;
+      appearance: none;
+      cursor: pointer;
+      outline: none;
+      transition: box-shadow 0.2s;
+    }
+    .select-wrap select:focus { box-shadow: 0 0 0 2px rgba(30,58,95,0.25); }
+    .select-wrap .arrow {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #94a3b8;
+      font-size: 20px;
+    }
+
+    /* Date row */
+    .date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .input-field {
+      width: 100%;
+      height: 50px;
+      padding: 0 16px;
+      background: #f4f6fb;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: #1e293b;
+      outline: none;
+      transition: box-shadow 0.2s;
+    }
+    .input-field:focus { box-shadow: 0 0 0 2px rgba(30,58,95,0.25); }
+
+    .check-btn {
+      width: 100%;
+      height: 50px;
+      background: #f0f6ff;
+      color: #1e3a5f;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .check-btn:hover { background: #1e3a5f; color: #fff; }
+
+    /* Availability badge */
+    .avail-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #166534;
+      margin-bottom: 22px;
+    }
+    .avail-badge .material-symbols-outlined { color: #22c55e; font-size: 20px; }
+
+    /* Time slots */
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .slot {
+      position: relative;
+      background: #f4f6fb;
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .slot input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .slot:hover { background: #e0ecff; }
+    .slot.checked { border-color: #1e3a5f; background: #f0f6ff; }
+    .slot .slot-time { font-size: 12px; font-weight: 600; color: #1e293b; }
+    .slot.checked .slot-time { color: #1e3a5f; }
+
+    /* Purpose */
+    textarea.input-field {
+      height: auto;
+      padding: 14px 16px;
+      resize: none;
+    }
+
+    /* Submit */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #1e3a5f, #0056b3);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(30,58,95,0.3);
+      margin-top: 24px;
+    }
+    .submit-btn:hover { transform: scale(1.01); box-shadow: 0 6px 24px rgba(30,58,95,0.4); }
+    .submit-btn:active { transform: scale(0.99); }
+
+    /* ── POPUP ── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; align-items: center; justify-content: center; }
+    .overlay.show { display: flex; }
+    .popup { background: #fff; border-radius: 18px; padding: 44px 40px; text-align: center; max-width: 380px; width: 90%; animation: popIn 0.3s ease; }
+    @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .popup .tick { font-size: 56px; margin-bottom: 16px; }
+    .popup h3 { font-size: 20px; font-weight: 700; color: #1e3a5f; margin-bottom: 10px; }
+    .popup p { font-size: 13px; color: #64748b; margin-bottom: 26px; line-height: 1.7; }
+    .popup-btn { background: #1e3a5f; color: #fff; border: none; padding: 12px 36px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .popup-btn:hover { background: #16304a; }
+
+    /* ── FOOTER ── */
+    footer {
+    text-align: center;
+    padding: 15px;
+    background: white;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #555;
+    letter-spacing: 0.5px;
+}
+    @media(max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 20px 16px; }
+      .slots-grid { grid-template-columns: repeat(2, 1fr); }
+      .date-row { grid-template-columns: 1fr; }
+      .form-side { padding: 24px 20px; }
+    }
+  </style>
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='booking.css') }}"> -->
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <form action="/logout" method="POST" style="margin:0;display:inline;margin-left:16px;">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="/dashboard"    class="sidebar-item">🏠 Dashboard</a>
+    <a href="/booking"      class="sidebar-item active">📅 Book Hall</a>
+    <a href="/my_booking"   class="sidebar-item">📋 My Booking</a>
+    <a href="/profile"      class="sidebar-item">👤 Profile</a>
+    <a href="/notification" class="sidebar-item">🔔 Notification</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="page-title">Book a Seminar Hall</div>
+    <div class="page-sub">Select a venue, pick a date and time slots, then submit your request</div>
+
+    {% if error %}
+    <div class="error-box">❌ {{ error }}</div>
+    {% endif %}
+
+    <!-- ✅ FIX: Single real form — all inputs are inside it with correct name attributes -->
+    <div class="booking-card">
+      <form class="form-side" method="POST" action="/booking" id="bookingForm">
+
+        <div class="form-heading">Reserve Your Hall</div>
+
+        <!-- Venue — name="hall_id" so Flask receives it directly -->
+        <div class="form-section">
+          <label class="field-label">Select Venue</label>
+          <div class="select-wrap">
+            <select id="venueSelect" name="hall_id" required>
+              {% for h in halls %}
+              <option value="{{ h.id }}"
+                      data-name="{{ h.name }}"
+                      data-capacity="{{ h.capacity }}"
+                      data-location="{{ h.location }}"
+                      data-icon="{{ h.icon }}"
+                      {% if selected_hall_id and h.id == selected_hall_id %}selected{% endif %}>
+                {{ h.icon }} {{ h.name }} — {{ h.capacity }} seats
+              </option>
+              {% endfor %}
+            </select>
+            <span class="material-symbols-outlined arrow">expand_more</span>
+          </div>
+        </div>
+
+        <!-- Date + Check — name="event_date" so Flask receives it directly -->
+        <div class="form-section">
+          <label class="field-label">Reservation Date</label>
+          <div class="date-row">
+            <input type="date" class="input-field" id="eventDate" name="event_date" required>
+            <button class="check-btn" type="button" onclick="checkAvailability()">
+              <span class="material-symbols-outlined">event_available</span>
+              Check Availability
+            </button>
+          </div>
+        </div>
+
+        <!-- Availability badge -->
+        <div class="avail-badge" id="availBadge" style="display:none;">
+          <span class="material-symbols-outlined">check_circle</span>
+          <span id="availText">Hall available for selected date</span>
+        </div>
+
+        <!-- Time Slots — each checkbox has name="time_slots" so Flask gets a list -->
+        <div class="form-section">
+          <label class="field-label">Select Time Slots</label>
+          <div class="slots-grid">
+            {% set slots = ['9:00-10:00','10:00-11:00','11:00-12:00','12:00-13:00','13:00-14:00','14:00-15:00','15:00-16:00'] %}
+            {% for slot in slots %}
+            <label class="slot" id="slot-{{ loop.index }}">
+              <input type="checkbox" name="time_slots" value="{{ slot }}" onchange="toggleSlot(this.closest('label'))">
+              <div class="slot-time">{{ slot }}</div>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Purpose — name="purpose" so Flask receives it directly -->
+        <div class="form-section">
+          <label class="field-label">Purpose of Booking</label>
+          <textarea class="input-field" name="purpose" id="purpose" rows="3"
+                    placeholder="The nature of your event..." required></textarea>
+        </div>
+
+        <!-- Submit — standard form submit, no JS required -->
+        <button class="submit-btn" type="submit">
+          <span class="material-symbols-outlined">lock_open</span>
+          Confirm Booking Request
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>CDGI Seminar Hall Booking Portal</footer>
+
+<script>
+  // Set minimum date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('eventDate').min = today;
+
+  // Toggle slot visual style (checkbox state is handled natively by the browser)
+  function toggleSlot(el) {
+    const cb = el.querySelector('input[type="checkbox"]');
+    el.classList.toggle('checked', cb.checked);
+  }
+
+  function checkAvailability() {
+    const date   = document.getElementById('eventDate').value;
+    const hallId = document.getElementById('venueSelect').value;
+    const sel    = document.getElementById('venueSelect');
+    const name   = sel.options[sel.selectedIndex].dataset.name || sel.value;
+    const badge  = document.getElementById('availBadge');
+
+    if (!date) { alert('Please select a date first'); return; }
+
+    const btn = document.querySelector('.check-btn');
+    btn.innerHTML = 'Checking...';
+    btn.disabled = true;
+
+    fetch(`/check_availability?hall_id=${hallId}&date=${date}`)
+      .then(r => r.json())
+      .then(data => {
+        btn.innerHTML = '<span class="material-symbols-outlined">event_available</span> Check Availability';
+        btn.disabled = false;
+
+        if (data.error) {
+          badge.style.cssText = 'display:flex; background:#fdecea; border-color:#fecaca;';
+          document.getElementById('availText').textContent = 'Error: ' + data.error;
+          return;
+        }
+
+        const bookedSlots = data.booked_slots || [];
+
+        // Update each slot's visual state based on availability
+        document.querySelectorAll('.slot').forEach(slotEl => {
+          const slotTime = slotEl.querySelector('.slot-time').textContent.trim();
+          const cb = slotEl.querySelector('input[type="checkbox"]');
+
+          if (bookedSlots.includes(slotTime)) {
+            // Mark as booked — disable and uncheck
+            cb.checked = false;
+            cb.disabled = true;
+            slotEl.classList.remove('checked');
+            slotEl.style.opacity       = '0.45';
+            slotEl.style.cursor        = 'not-allowed';
+            slotEl.style.background    = '#f5f5f5';
+            slotEl.style.borderColor   = '#ccc';
+            slotEl.style.pointerEvents = 'none';
+            if (!slotEl.querySelector('.booked-lbl')) {
+              const lbl = document.createElement('div');
+              lbl.className = 'booked-lbl';
+              lbl.style.cssText = 'font-size:10px;color:#c0392b;font-weight:700;margin-top:2px;';
+              lbl.textContent = 'Booked';
+              slotEl.appendChild(lbl);
+            }
+          } else {
+            // Restore available slot
+            cb.disabled = false;
+            slotEl.style.opacity       = '1';
+            slotEl.style.cursor        = 'pointer';
+            slotEl.style.background    = '';
+            slotEl.style.borderColor   = '';
+            slotEl.style.pointerEvents = 'auto';
+            const lbl = slotEl.querySelector('.booked-lbl');
+            if (lbl) lbl.remove();
+          }
+        });
+
+        // Update availability badge — reset both background and border together
+        if (bookedSlots.length === 0) {
+          badge.style.cssText = 'display:flex; background:#e8f5e9; border:1px solid #bbf7d0;';
+          document.getElementById('availText').textContent =
+            name + ' — All slots available on ' + formatDate(date) + ' ✅';
+        } else {
+          badge.style.cssText = 'display:flex; background:#fff3e0; border:1px solid #fed7aa;';
+          document.getElementById('availText').textContent =
+            `${bookedSlots.length} slot(s) already booked ⚠️`;
+        }
+      })
+      .catch(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined">event_available</span> Check Availability';
+        btn.disabled = false;
+        alert('Could not connect to server. Please retry.');
+      });
+  }
+
+  function formatDate(d) {
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+</script>
+
+</body>
+</html>

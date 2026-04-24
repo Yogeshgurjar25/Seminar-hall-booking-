@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - CDGI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/register">Register</a>
+  </div>
+</nav>
+
+<!-- Login Box -->
+<div class="container">
+
+  <div class="login-box">
+    <h1>Welcome Back</h1>
+    <p>Login to access seminar hall booking</p>
+
+    <form method="POST" action="/login">
+      {% if error %}
+        <p class="error-msg">{{ error }}</p>
+      {% endif %}
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter your email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter your password" required>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="register">
+      Don't have an account? <a href="/register">Register</a>
+    </p>
+    <p class="register">
+      Admin - <a href="/admin_login">Admin Login</a>
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  CDGI Seminar Hall Booking Portal
+</footer>
+
+</body>
+</html>

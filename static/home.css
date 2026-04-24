@@ -1,0 +1,102 @@
+.hero-gradient {
+    background: linear-gradient(180deg, rgba(0,63,135,0.05), #f8f9fa);
+}
+
+.title {
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.desc {
+    color: gray;
+    margin-top: 10px;
+}
+
+.tag {
+    background: #dbeafe;
+    color: #003f87;
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #003f87;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #002f6c;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    border: 1px solid gray;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-outline {
+    border: 2px solid #003f87;
+    color: #003f87;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-outline:hover {
+    background: #003f87;
+    color: white;
+}
+
+.section-title {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.section-desc {
+    color: gray;
+    margin-top: 10px;
+}
+
+.card {
+    background: #f3f4f6;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.register-section {
+    text-align: center;
+    padding: 60px;
+    background: #e5e7eb;
+}
+
+/* Footer */
+.footer {
+    background: white;
+    color: #555;
+    text-align: center;
+    padding: 15px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}

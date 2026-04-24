@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Bookings — CDGI Seminar Hall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6fb;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+    background: #1e3a5f;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    color: white;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: #60a5fa;
+    font-weight: 700;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.logout-btn {
+    background: #e74c3c;
+    padding: 7px 18px;
+    border-radius: 6px;
+    color: white !important;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+}
+
+.logout-btn:hover {
+    background: #c0392b;
+}
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      padding: 20px;
+      min-height: calc(100vh - 70px);
+      border-right: 1px solid #eee;
+      flex-shrink: 0;
+    }
+    .sidebar a {
+      display: block;
+      padding: 10px;
+      margin-bottom: 10px;
+      color: #555;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .sidebar a:hover { background: #f1f5f9; color: #1e3a5f; }
+    .sidebar a.active {
+      background: #e0f2fe;
+      color: #1e3a5f;
+      font-weight: 500;
+      border-left: 4px solid #1e3a5f;
+      padding-left: 8px;
+    }
+    .sidebar .icon { font-size: 16px; }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1;
+      padding: 30px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a2340;
+    }
+    .page-header p { color: #718096; font-size: 14px; margin-top: 4px; }
+
+    /* ── FILTER TABS ── */
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 8px 22px;
+      border-radius: 20px;
+      border: 1.5px solid #cbd5e0;
+      background: #fff;
+      font-size: 13.5px;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: #1a2340;
+      color: #fff;
+      border-color: #1a2340;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+      margin-top: 8px;
+    }
+
+    /* ── BOOKING CARDS GRID ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    /* ── SINGLE BOOKING CARD ── */
+    .booking-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      overflow: hidden;
+      transition: transform 0.15s;
+    }
+    .booking-card:hover { transform: translateY(-3px); }
+
+    .card-strip { height: 6px; width: 100%; }
+    .strip-pending   { background: #e8a838; }
+    .strip-approved  { background: #38a169; }
+    .strip-rejected  { background: #e05c3a; }
+    .strip-cancelled { background: #a0aec0; }
+
+    .card-body { padding: 18px 20px; }
+
+    .card-hall-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .hall-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: #eef2ff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .hall-info h3 { font-size: 15px; font-weight: 700; color: #1a2340; }
+    .hall-info p  { font-size: 12.5px; color: #718096; margin-top: 2px; }
+
+    .card-details { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      color: #4a5568;
+    }
+    .detail-row .d-icon { font-size: 15px; color: #a0aec0; flex-shrink: 0; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .badge-pending   { background: #fef3cd; color: #856404; }
+    .badge-approved  { background: #d4edda; color: #155724; }
+    .badge-rejected  { background: #fde8e4; color: #8b2318; }
+    .badge-cancelled { background: #e2e8f0; color: #4a5568; }
+
+    /* Admin remark box */
+    .admin-remark {
+      background: #f7fafc;
+      border-left: 3px solid #cbd5e0;
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12.5px;
+      color: #718096;
+      margin-bottom: 14px;
+    }
+    .admin-remark strong { color: #4a5568; }
+
+    .btn-cancel {
+      width: 100%;
+      padding: 10px;
+      background: #fff;
+      border: 1.5px solid #e05c3a;
+      color: #e05c3a;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-cancel:hover { background: #e05c3a; color: #fff; }
+    .btn-cancel:disabled {
+      border-color: #cbd5e0;
+      color: #a0aec0;
+      cursor: not-allowed;
+      background: #fff;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #a0aec0;
+    }
+    .empty-state .empty-icon { font-size: 52px; margin-bottom: 14px; }
+    .empty-state p { font-size: 15px; margin-bottom: 20px; }
+    .btn-book-now {
+      display: inline-block;
+      padding: 10px 28px;
+      background: #1a2340;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ── CANCEL MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 32px 28px;
+      width: 380px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+    .modal-box .modal-icon { font-size: 44px; margin-bottom: 12px; }
+    .modal-box h3 { font-size: 18px; color: #1a2340; margin-bottom: 8px; }
+    .modal-box p  { font-size: 13.5px; color: #718096; margin-bottom: 24px; }
+    .modal-actions { display: flex; gap: 12px; }
+    .btn-modal-keep {
+      flex: 1; padding: 10px;
+      border: 1.5px solid #cbd5e0;
+      background: #fff; color: #4a5568;
+      border-radius: 8px; font-size: 14px; cursor: pointer;
+    }
+    .btn-modal-confirm {
+      flex: 1; padding: 10px;
+      background: #e05c3a; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .btn-modal-confirm:hover { background: #c94d2e; }
+
+    /* Flash messages */
+    .flash-msg {
+      padding: 12px 18px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .flash-success { background: #d4edda; color: #155724; }
+    .flash-error   { background: #fde8e4; color: #8b2318; }
+
+    footer {
+    text-align: center;
+    padding: 15px;
+    background: white;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #555;
+    letter-spacing: 0.5px;
+}
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <form action="/logout" method="POST" style="margin:0;">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="/dashboard">
+      <span class="icon">🏠</span> Dashboard
+    </a>
+    <a href="/booking">
+      <span class="icon">📅</span> Book Hall
+    </a>
+    <a href="/my_booking" class="active">
+      <span class="icon">📋</span> My Bookings
+    </a>
+    <a href="/profile">
+      <span class="icon">👤</span> Profile
+    </a>
+    <a href="/notification">
+      <span class="icon">🔔</span> Notifications
+    </a>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-msg {% if category == 'success' %}flash-success{% else %}flash-error{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="page-header">
+      <h2>My Bookings</h2>
+      <p>View and manage all your booking requests here</p>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="filterBookings('all', this)">All</button>
+      <button class="tab-btn" onclick="filterBookings('pending', this)">Pending</button>
+      <button class="tab-btn" onclick="filterBookings('approved', this)">Approved</button>
+      <button class="tab-btn" onclick="filterBookings('rejected', this)">Rejected</button>
+      <button class="tab-btn" onclick="filterBookings('cancelled', this)">Cancelled</button>
+    </div>
+
+    <!-- UPCOMING BOOKINGS -->
+    <div id="section-upcoming">
+      <div class="section-label">Upcoming Bookings</div>
+      <div class="cards-grid" id="upcoming-grid"></div>
+    </div>
+
+    <!-- PAST BOOKINGS -->
+    <div id="section-past">
+      <div class="section-label">Past Bookings</div>
+      <div class="cards-grid" id="past-grid"></div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <p>There are no bookings in this category.</p>
+      <a href="/booking" class="btn-book-now">+ New Booking</a>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ CANCEL CONFIRM MODAL ══ -->
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal-box">
+    <div class="modal-icon">⚠️</div>
+    <h3>Cancel Booking?</h3>
+    <p>Are you sure you want to cancel this booking?</p>
+    <div class="modal-actions">
+      <button class="btn-modal-keep" onclick="closeModal()">No, Keep It</button>
+      <button class="btn-modal-confirm" onclick="confirmCancel()">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden form for cancel POST request -->
+<form id="cancelForm" method="POST" action="" style="display:none;"></form>
+
+<script>
+  // ── Flask se data inject ho raha hai (Jinja) ──
+  const bookings = {{ bookings | tojson }};
+
+  // ── is_past dynamically calculate karo event_date se ──
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  bookings.forEach(b => {
+    b.is_past = new Date(b.event_date) < today;
+  });
+
+  // ── Status config ──
+  const statusConfig = {
+    pending:   { badge: "badge-pending",   strip: "strip-pending",   label: "Pending"   },
+    approved:  { badge: "badge-approved",  strip: "strip-approved",  label: "Approved"  },
+    rejected:  { badge: "badge-rejected",  strip: "strip-rejected",  label: "Rejected"  },
+    cancelled: { badge: "badge-cancelled", strip: "strip-cancelled", label: "Cancelled" }
+  };
+
+  let currentFilter = "all";
+  let cancelTargetId = null;
+
+  // ── Card HTML banana ──
+  function makeCard(b) {
+    const cfg = statusConfig[b.status] || statusConfig.pending;
+    const canCancel = (b.status === "pending");
+
+    // Admin remark dikhao agar hai
+    const remarkHtml = b.admin_remark
+      ? `<div class="admin-remark"><strong>Admin Note:</strong> ${b.admin_remark}</div>`
+      : "";
+
+    // Cancel button text
+    let btnText = "Cancel Booking";
+    if (b.status === "cancelled") btnText = "Cancelled";
+    if (b.status === "rejected")  btnText = "Rejected";
+    if (b.status === "approved" && b.is_past) btnText = "Completed";
+
+    const cancelBtn = `
+      <button class="btn-cancel"
+        ${canCancel ? `onclick="openModal(${b.id})"` : "disabled"}>
+        ${btnText}
+      </button>`;
+
+    // time_slots — comma separated string aata hai DB se
+    const slots = b.time_slots ? b.time_slots.replace(/,/g, ", ") : "—";
+
+    return `
+      <div class="booking-card" id="card-${b.id}" data-status="${b.status}">
+        <div class="card-strip ${cfg.strip}"></div>
+        <div class="card-body">
+          <div class="card-hall-row">
+            <div class="hall-icon">${b.hall_icon || "🏛️"}</div>
+            <div class="hall-info">
+              <h3>${b.hall_name || "Hall"}</h3>
+              <p>${b.purpose || ""}</p>
+            </div>
+          </div>
+
+          <div class="card-details">
+            <div class="detail-row">
+              <span class="d-icon">📅</span>
+              <span>${formatDate(b.event_date)}</span>
+            </div>
+            <div class="detail-row">
+              <span class="d-icon">⏰</span>
+              <span>${slots}</span>
+            </div>
+            <div class="detail-row">
+              <span class="d-icon">📌</span>
+              <span>Booking #${b.id}</span>
+            </div>
+          </div>
+
+          <span class="status-badge ${cfg.badge}">${cfg.label}</span>
+
+          ${remarkHtml}
+          ${cancelBtn}
+        </div>
+      </div>`;
+  }
+
+  // ── Date format: "2026-04-10" → "10 Apr 2026" ──
+  function formatDate(d) {
+    if (!d) return "—";
+    const months = ["Jan","Feb","Mar","Apr","May","Jun",
+                    "Jul","Aug","Sep","Oct","Nov","Dec"];
+    const dt = new Date(d);
+    return `${dt.getDate()} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+  }
+
+  // ── Grid render ──
+  function renderBookings(filter) {
+    currentFilter = filter;
+
+    const filtered = filter === "all"
+      ? bookings
+      : bookings.filter(b => b.status === filter);
+
+    const upcoming = filtered.filter(b => !b.is_past);
+    const past     = filtered.filter(b =>  b.is_past);
+
+    document.getElementById("upcoming-grid").innerHTML =
+      upcoming.length ? upcoming.map(makeCard).join("") : "";
+    document.getElementById("past-grid").innerHTML =
+      past.length ? past.map(makeCard).join("") : "";
+
+    document.getElementById("section-upcoming").style.display =
+      upcoming.length ? "block" : "none";
+    document.getElementById("section-past").style.display =
+      past.length ? "block" : "none";
+
+    document.getElementById("empty-state").style.display =
+      (!upcoming.length && !past.length) ? "block" : "none";
+  }
+
+  // ── Tab filter ──
+  function filterBookings(filter, btn) {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderBookings(filter);
+  }
+
+  // ── Modal open/close ──
+  function openModal(id) {
+    cancelTargetId = id;
+    document.getElementById("cancelModal").classList.add("show");
+  }
+  function closeModal() {
+    cancelTargetId = null;
+    document.getElementById("cancelModal").classList.remove("show");
+  }
+
+  // ── Confirm cancel — Flask backend ko POST karo ──
+  function confirmCancel() {
+    if (!cancelTargetId) return;
+    const form = document.getElementById("cancelForm");
+    form.action = `/cancel_booking/${cancelTargetId}`;
+    form.submit();
+  }
+
+  // ── Initial render ──
+  renderBookings("all");
+
+</script>
+
+<footer>CDGI - Seminar Hall Booking Portal</footer>
+
+</body>
+</html>

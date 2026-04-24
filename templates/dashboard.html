@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <form action="/logout" method="POST" style="margin:0;display:inline;margin-left:20px;">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="/dashboard" class="sidebar-item active">🏠 Dashboard</a>
+    <a href="/booking" class="sidebar-item">📅 Book Hall</a>
+    <a href="/my_booking" class="sidebar-item">📋 My Booking</a>
+    <a href="/profile" class="sidebar-item">👤 Profile</a>
+    <a href="/notification" class="sidebar-item">🔔 Notification</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <h2>Available Seminar Halls</h2>
+    <p class="subtitle">Select a hall and book it for your event</p>
+
+    <div class="halls-grid">
+
+      {% for hall in halls %}
+      <div class="hall-card">
+        <div class="hall-img">{{ hall.icon }}</div>
+        <div class="hall-body">
+          <div class="hall-name">{{ hall.name }}</div>
+          <div class="hall-info">Capacity: {{ hall.capacity }} seats</div>
+          <div class="hall-info">{{ hall.location }}</div>
+          <a href="/booking?hall_id={{ hall.id }}" class="book-btn">Book Now</a>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+CDGI - Seminar Hall Booking Portal
+</footer>
+
+</body>
+</html>

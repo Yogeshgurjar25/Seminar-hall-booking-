@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile — CDGI Seminar Hall Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: #f4f6fb; color: #1e293b; display: flex; flex-direction: column; min-height: 100vh; }
+
+    nav {
+      background: #1e3a5f;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .logo { color: #fff; font-size: 24px; font-weight: 600; letter-spacing: 1px; }
+    nav .logo span { color: #60a5fa; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.8);
+      margin-left: 16px;
+      text-decoration: none;
+    }
+    nav .nav-links a:hover { color: #fff; }
+    .logout-btn {
+      background: #e74c3c;
+      padding: 8px 20px;
+      border-radius: 6px;
+      color: white !important;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-left: 16px;
+    }
+
+    .layout { display: flex; flex: 1; }
+
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      border-right: 1px solid #eee;
+      padding: 20px;
+      flex-shrink: 0;
+      min-height: calc(100vh - 70px);
+    }
+    .sidebar-item {
+      display: block;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #555;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-item:hover { background: #f1f5f9; color: #1e3a5f; }
+    .sidebar-item.active { background: #e0f2fe; color: #1e3a5f; font-weight: 500; border-left: 4px solid #1e3a5f; padding-left: 8px; }
+    .sidebar-item .s-icon { font-size: 16px; }
+
+    .main { flex: 1; padding: 40px 60px; display: flex; flex-direction: column; align-items: center; }
+
+    /* STATS ROW */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 680px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 24px;
+      flex: 1;
+      min-width: 120px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+    .stat-card .stat-num { font-size: 26px; font-weight: 600; color: #1e3a5f; }
+    .stat-card .stat-label { font-size: 11px; color: #94a3b8; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-card.approved .stat-num { color: #16a34a; }
+    .stat-card.pending  .stat-num { color: #e67e22; }
+    .stat-card.rejected .stat-num { color: #e74c3c; }
+
+    .profile-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+      width: 100%;
+      max-width: 680px;
+      overflow: hidden;
+    }
+
+    .profile-header {
+      background: #1e3a5f;
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .avatar {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 3px solid rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .profile-header .name { font-size: 18px; font-weight: 600; color: #fff; }
+    .profile-header .dept { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+    .profile-body { padding: 30px 40px; }
+    .divider { border: none; border-top: 1px solid #e2e8f0; margin: 4px 0 24px; }
+
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: #94a3b8;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .field .value {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1e293b;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .edit-btn {
+      width: 100%;
+      background: #1e3a5f;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .edit-btn:hover { background: #2563c4; }
+
+    .edit-section { display: none; }
+    .edit-section.show { display: block; }
+    .view-section.hide { display: none; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: #94a3b8;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    .form-group input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: #1e293b;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+    .form-group input:focus { border-color: #1e3a5f; }
+    .form-group input[readonly] { background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
+
+    .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+    .save-btn {
+      flex: 1;
+      background: #1e3a5f;
+      color: #fff;
+      border: none;
+      padding: 11px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .save-btn:hover { background: #2563c4; }
+    .cancel-btn {
+      flex: 1;
+      background: #fff;
+      color: #64748b;
+      border: 1.5px solid #e2e8f0;
+      padding: 11px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cancel-btn:hover { background: #f8fafc; }
+
+    /* Success / Error message */
+    .msg-box {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .msg-success { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+    .msg-error   { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #94a3b8; background: #fff; border-top: 1px solid #e2e8f0; margin-top: auto; }
+
+    @media(max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+      .profile-body { padding: 24px 20px; }
+      .profile-header { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <form action="/logout" method="POST" style="display:inline;"><button type="submit" class="logout-btn">Logout</button></form>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <div class="sidebar">
+    <a href="/dashboard"    class="sidebar-item"><span class="s-icon">🏠</span> Dashboard</a>
+    <a class="sidebar-item" href="/booking"><span class="s-icon">📅</span> Book Hall</a>
+    <a href="/my_booking"   class="sidebar-item"><span class="s-icon">📋</span> My Booking</a>
+    <a href="/profile"      class="sidebar-item active"><span class="s-icon">👤</span> Profile</a>
+    <a href="/notification" class="sidebar-item"><span class="s-icon">🔔</span> Notification</a>
+  </div>
+
+  <div class="main">
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">{{ (stats.values() | sum) }}</div>
+        <div class="stat-label">Total Bookings</div>
+      </div>
+      <div class="stat-card approved">
+        <div class="stat-num">{{ stats.get('approved', 0) }}</div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card pending">
+        <div class="stat-num">{{ stats.get('pending', 0) }}</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card rejected">
+        <div class="stat-num">{{ stats.get('rejected', 0) }}</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar">{{ user.name[:2].upper() if user.name else 'U' }}</div>
+        <div class="name">{{ user.name }}</div>
+        <div class="dept">{{ user.department }}</div>
+      </div>
+
+      <div class="profile-body">
+        <hr class="divider"/>
+
+        <!-- Flash messages -->
+        {% if success %}
+          <div class="msg-box msg-success">✅ {{ success }}</div>
+        {% endif %}
+        {% if error %}
+          <div class="msg-box msg-error">❌ {{ error }}</div>
+        {% endif %}
+
+        <!-- VIEW SECTION -->
+        <div class="view-section" id="viewSection">
+          <div class="field">
+            <label>Full Name</label>
+            <div class="value">{{ user.name }}</div>
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <div class="value">{{ user.email }}</div>
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <div class="value">{{ user.phone }}</div>
+          </div>
+          <div class="field">
+            <label>Department</label>
+            <div class="value">{{ user.department }}</div>
+          </div>
+          <div class="field">
+            <label>Member Since</label>
+            <div class="value">{{ user.created_at.strftime('%d %B %Y') if user.created_at else '—' }}</div>
+          </div>
+          <button class="edit-btn" onclick="showEdit()">✏️ Edit Profile</button>
+        </div>
+
+        <!-- EDIT SECTION -->
+        <div class="edit-section" id="editSection">
+          <form method="POST" action="/profile">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" name="name" value="{{ user.name }}" required/>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" value="{{ user.email }}" readonly title="Email change nahi ho sakta"/>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" value="{{ user.phone }}" maxlength="10" required/>
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <input type="text" value="{{ user.department }}" readonly title="Department cannot be change"/>
+            </div>
+            <div class="form-group">
+              <label>Current Password <span style="color:#94a3b8;font-size:11px;">(required to set a new password)</span></label>
+              <input type="password" name="current_password" placeholder="Enter your current password"/>
+            </div>
+            <div class="form-group">
+              <label>New Password <span style="color:#94a3b8;font-size:10px;"></span></label>
+              <input type="password" name="new_password" placeholder=" Enter New Password"/>
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" name="confirm_password" placeholder="Confirm Password "/>
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="save-btn">💾 Save Changes</button>
+              <button type="button" class="cancel-btn" onclick="hideEdit()">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>CDGI - Seminar Hall Booking Portal</footer>
+
+<script>
+  function showEdit() {
+    document.getElementById('viewSection').classList.add('hide');
+    document.getElementById('editSection').classList.add('show');
+  }
+  function hideEdit() {
+    document.getElementById('editSection').classList.remove('show');
+    document.getElementById('viewSection').classList.remove('hide');
+  }
+
+  // Agar error/success message hai to edit mode open raho
+  {% if error %}
+    showEdit();
+  {% endif %}
+</script>
+
+</body>
+</html>

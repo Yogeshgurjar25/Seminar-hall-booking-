@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | CDGI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/login">Login</a>
+  </div>
+</nav>
+
+<!-- Register Container -->
+<div class="container">
+
+  <div class="card">
+
+    <h2>Create Account</h2>
+    <p>Please enter your details</p>
+
+    <!-- FORM -->
+    <form method="POST" action="/register" onsubmit="return validateForm()">
+
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email (cdgi.edu.in)" required>
+      <input type="tel" name="phone" placeholder="Phone Number" required>
+
+      <select name="department" required>
+        <option value="">Select Department</option>
+        <option>CSE</option>
+        <option>IT</option>
+        <option>EC</option>
+        <option>ME</option>
+        <option>CE</option>
+      </select>
+
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirm" placeholder="Confirm Password" required>
+
+      <button type="submit">Register</button>
+
+    </form>
+
+    <p class="login-link">
+      Already have an account? <a href="/login">Login</a>
+    </p>
+
+  </div>
+
+</div>
+
+<!-- JAVASCRIPT VALIDATION -->
+<script>
+function validateForm() {
+
+    let name = document.getElementsByName("name")[0].value;
+    let email = document.getElementsByName("email")[0].value;
+    let phone = document.getElementsByName("phone")[0].value;
+    let password = document.getElementsByName("password")[0].value;
+    let confirm = document.getElementsByName("confirm")[0].value;
+
+    if (name.length < 3) {
+        alert("Name must be at least 3 characters");
+        return false;
+    }
+
+    if (!email.endsWith("@cdgi.edu.in")) {
+        alert("Use your CDGI email only");
+        return false;
+    }
+
+    if (phone.length != 10 || isNaN(phone)) {
+        alert("Enter valid 10 digit phone number");
+        return false;
+    }
+
+    if (password.length < 6) {
+        alert("Password must be at least 6 characters");
+        return false;
+    }
+
+    if (password !== confirm) {
+        alert("Passwords do not match");
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+<footer>
+  CDGI Seminar Hall Booking Portal
+</footer>
+
+</body>
+</html>

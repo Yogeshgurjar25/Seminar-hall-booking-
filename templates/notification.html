@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification — CDGI BookIt</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f6fb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAVBAR */
+  nav {
+    background: #1e3a5f;
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo { font-size: 24px; font-weight: 600; color: #fff; letter-spacing: 1px; }
+  .logo span { color: #60a5fa; font-weight: 700; }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+  }
+
+  .nav-links a:hover {
+    color: white;
+  }
+
+  .logout-btn {
+    background: #e74c3c;
+    padding: 7px 18px;
+    border-radius: 6px;
+    color: white !important;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+  }
+
+  .logout-btn:hover {
+    background: #c0392b;
+  }
+  /* LAYOUT */
+  .layout {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+  }
+
+  /* SIDEBAR */
+  aside {
+    width: 220px;
+    background: #fff;
+    border-right: 1px solid #eee;
+    padding: 20px;
+    min-height: calc(100vh - 70px);
+    flex-shrink: 0;
+  }
+  .sidebar-item {
+    display: block;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #555;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .sidebar-item:hover { background: #f1f5f9; color: #1e3a5f; }
+  .sidebar-item.active {
+    background: #e0f2fe;
+    color: #1e3a5f;
+    border-left: 4px solid #1e3a5f;
+    padding-left: 8px;
+    font-weight: 500;
+  }
+  .sidebar-icon { font-size: 16px; }
+
+  /* MAIN CONTENT */
+  main { padding: 30px; flex: 1; max-width: calc(100% - 220px); overflow-x: hidden; }
+  .page-title { font-size: 1.6rem; font-weight: 700; color: #1a2a4a; margin-bottom: 0.3rem; }
+  .page-sub { color: #718096; font-size: 0.9rem; margin-bottom: 1.8rem; }
+
+  /* FILTER TABS */
+  .filter-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #4a5568;
+    transition: all 0.15s;
+  }
+  .tab:hover { border-color: #1a2a4a; color: #1a2a4a; }
+  .tab.active { background: #1a2a4a; color: #fff; border-color: #1a2a4a; }
+
+  /* NOTIFICATION CARDS */
+  .notif-list { display: flex; flex-direction: column; gap: 1rem; }
+
+  .notif-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    border-left: 4px solid transparent;
+    transition: box-shadow 0.2s;
+    position: relative;
+  }
+  .notif-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+
+  .notif-card.success { border-left-color: #22c55e; }
+  .notif-card.info    { border-left-color: #3b82f6; }
+  .notif-card.error   { border-left-color: #ef4444; }
+  .notif-card.warning { border-left-color: #f59e0b; }
+
+  .notif-icon {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .success .notif-icon { background: #dcfce7; }
+  .info    .notif-icon { background: #dbeafe; }
+  .error   .notif-icon { background: #fee2e2; }
+  .warning .notif-icon { background: #fef9c3; }
+
+  .notif-body { flex: 1; }
+  .notif-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .notif-title { font-size: 0.95rem; font-weight: 600; color: #1a2a4a; }
+  .notif-time  { font-size: 0.78rem; color: #a0aec0; white-space: nowrap; margin-left: 12px; }
+  .notif-msg   { font-size: 0.86rem; color: #4a5568; line-height: 1.55; margin-bottom: 8px; }
+
+  .badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .badge.success { background: #dcfce7; color: #15803d; }
+  .badge.info    { background: #dbeafe; color: #1d4ed8; }
+  .badge.error   { background: #fee2e2; color: #b91c1c; }
+  .badge.warning { background: #fef9c3; color: #b45309; }
+
+  .unread-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #1a2a4a;
+    position: absolute;
+    top: 1.2rem; right: 1.2rem;
+  }
+
+  /* TOP BAR */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .count-label { font-size: 0.85rem; color: #718096; }
+  .mark-all {
+    font-size: 0.82rem;
+    color: #1a2a4a;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-weight: 500;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #a0aec0;
+  }
+  .empty-state .empty-icon { font-size: 52px; margin-bottom: 14px; }
+  .empty-state p { font-size: 15px; }
+
+  footer {
+    text-align: center;
+    padding: 15px;
+    background: white;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #555;
+    letter-spacing: 0.5px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">CDGI <span>BookIt</span></div>
+
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+
+    <form action="/logout" method="POST" style="margin:0;">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <a class="sidebar-item" href="/dashboard">
+      <span class="sidebar-icon">🏠</span> Dashboard
+    </a>
+    <a class="sidebar-item" href="/booking">
+      <span class="sidebar-icon">📅</span> Book Hall
+    </a>
+    <a class="sidebar-item" href="/my_booking">
+      <span class="sidebar-icon">📋</span> My Bookings
+    </a>
+    <a class="sidebar-item" href="/profile">
+      <span class="sidebar-icon">👤</span> Profile
+    </a>
+    <a class="sidebar-item active" href="/notification">
+      <span class="sidebar-icon">🔔</span> Notification
+    </a>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <h1 class="page-title">Notifications</h1>
+    <p class="page-sub">Stay updated with your booking activity</p>
+
+    <!-- FILTER TABS -->
+    <div class="filter-tabs">
+      <div class="tab active" onclick="filterTab('all', this)">All</div>
+      <div class="tab" onclick="filterTab('success', this)">Approved</div>
+      <div class="tab" onclick="filterTab('info', this)">Pending</div>
+      <div class="tab" onclick="filterTab('error', this)">Rejected</div>
+      <div class="tab" onclick="filterTab('warning', this)">Cancelled</div>
+    </div>
+
+    <div class="top-bar">
+      <span class="count-label" id="count-label">0 notifications</span>
+      <button class="mark-all" onclick="markAllRead()">Mark all as read</button>
+    </div>
+
+    <!-- NOTIFICATION LIST -->
+    <div class="notif-list" id="notif-list"></div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <div class="empty-icon">🔕</div>
+      <p>No notifications available right now.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ── Flask se data inject ho raha hai (Jinja) ──
+  const notifications = {{ notifications | tojson }};
+
+  // Type ke hisaab se icon decide karo
+  const typeConfig = {
+    success: { icon: "✅", label: "Approved"  },
+    info:    { icon: "🔄", label: "Pending"   },
+    error:   { icon: "❌", label: "Rejected"  },
+    warning: { icon: "⚠️", label: "Cancelled" }
+  };
+
+  // Time format karo
+  function timeAgo(dateStr) {
+    if (!dateStr) return "";
+    const now  = new Date();
+    const then = new Date(dateStr);
+    const diff = Math.floor((now - then) / 1000); // seconds
+    if (diff < 60)   return "Just now";
+    if (diff < 3600) return Math.floor(diff / 60) + " min ago";
+    if (diff < 86400)return Math.floor(diff / 3600) + " hr ago";
+    if (diff < 172800) return "Yesterday";
+    return then.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+  }
+
+  function makeCard(n) {
+    const cfg  = typeConfig[n.type] || { icon: "🔔", label: n.type };
+    const unread = !n.is_read ? '<div class="unread-dot"></div>' : "";
+
+    return `
+      <div class="notif-card ${n.type}" id="notif-${n.id}" data-type="${n.type}">
+        <div class="notif-icon">${cfg.icon}</div>
+        <div class="notif-body">
+          <div class="notif-header">
+            <span class="notif-title">${n.title}</span>
+            <span class="notif-time">${timeAgo(n.created_at)}</span>
+          </div>
+          <p class="notif-msg">${n.message}</p>
+          <div class="notif-footer">
+            <span class="badge ${n.type}">${cfg.label}</span>
+          </div>
+        </div>
+        ${unread}
+      </div>`;
+  }
+
+  let currentFilter = "all";
+
+  function renderNotifs(filter) {
+    currentFilter = filter;
+    const filtered = filter === "all"
+      ? notifications
+      : notifications.filter(n => n.type === filter);
+
+    const list = document.getElementById("notif-list");
+    list.innerHTML = filtered.length ? filtered.map(makeCard).join("") : "";
+
+    document.getElementById("empty-state").style.display =
+      filtered.length ? "none" : "block";
+
+    document.getElementById("count-label").textContent =
+      filtered.length + " notification" + (filtered.length !== 1 ? "s" : "");
+  }
+
+  function filterTab(filter, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderNotifs(filter);
+  }
+
+  function markAllRead() {
+    document.querySelectorAll('.unread-dot').forEach(dot => dot.remove());
+    notifications.forEach(n => n.is_read = true);
+  }
+
+  // Initial render
+  renderNotifs("all");
+</script>
+
+<footer>CDGI - Seminar Hall Booking Portal</footer>
+</body>
+</html>

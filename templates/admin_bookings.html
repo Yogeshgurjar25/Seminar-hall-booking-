@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Bookings — CDGI Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-container": "#0056b3",
+            "on-secondary-container": "#475a7f",
+            "surface-container": "#edeeef",
+            "inverse-surface": "#2e3132",
+            "secondary": "#4c5e84",
+            "primary": "#003f87",
+            "surface-container-high": "#e7e8e9",
+            "on-background": "#191c1d",
+            "surface-container-low": "#f3f4f5",
+            "on-tertiary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-container": "#bbd0ff",
+            "surface-container-highest": "#e1e3e4",
+            "outline": "#727784",
+            "surface-variant": "#e1e3e4",
+            "surface-bright": "#f8f9fa",
+            "on-surface": "#191c1d",
+            "on-error-container": "#93000a",
+            "surface": "#f8f9fa",
+            "secondary-container": "#bfd2fd",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#424752",
+            "error": "#ba1a1a",
+            "background": "#f8f9fa",
+            "inverse-primary": "#acc7ff",
+            "surface-tint": "#115cb9",
+            "outline-variant": "#c2c6d4",
+            "inverse-on-surface": "#f0f1f2",
+            "primary-fixed": "#d7e2ff",
+            "primary-fixed-dim": "#acc7ff",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    #rejectModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999; align-items:center; justify-content:center; }
+    #rejectModal.open { display:flex; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: #f4f6fb; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* NAVBAR — exact same as admin.html */
+    nav { background: #1e3a5f; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .logo { color: white; font-weight: 600; font-size: 24px; letter-spacing: 1px; }
+    .logo span { color: #60a5fa; font-weight: 700; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a { color: rgba(255,255,255,0.8); margin-left: 16px; text-decoration: none; }
+    .nav-links a:hover { color: #fff; }
+    .logout-btn { background: #e74c3c; padding: 8px 20px; border-radius: 6px; color: white !important; font-weight: 500; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 16px; line-height: 1.5; margin-left: 16px; }
+
+    /* LAYOUT */
+    .layout { display: flex; align-items: flex-start; flex: 1; }
+
+    /* SIDEBAR — exact same as admin.html */
+    .sidebar { width: 220px; background: white; padding: 20px; min-height: calc(100vh - 73px); border-right: 1px solid #eee; flex-shrink: 0; }
+    .sidebar-item { display: block; padding: 10px; margin-bottom: 10px; color: #555; text-decoration: none; border-radius: 6px; font-size: 18px; }
+    .sidebar-item:hover { background: #f1f5f9; }
+    .sidebar-item.active { background: #e0f2fe; color: #1e3a5f; border-left: 4px solid #1e3a5f; padding-left: 8px; font-weight: 500; }
+
+    /* ADMIN MAIN */
+    .admin-main { flex: 1; min-width: 0; }
+
+    /* footer — exact same as admin.html */
+    footer { text-align: center; padding: 15px; background: white; margin-top: auto; border-top: 1px solid #e5e7eb; font-size: 14px; color: #555; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+
+  <!-- NAVBAR — exact same as admin.html -->
+  <header class="w-full sticky top-0 z-50 flex items-center justify-between px-8 py-4 shadow-md" style="background:#1e3a5f;">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1;">account_balance</span>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white leading-tight">Admin Central</h1>
+        <p class="text-[10px] uppercase tracking-widest text-blue-200 font-bold">CDGI BOOKIT</p>
+      </div>
+    </div>
+    <form action="/logout" method="POST">
+      <button type="submit" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors border border-white/20">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Logout
+      </button>
+    </form>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR — exact same as admin.html -->
+    <div class="sidebar">
+      <a href="/admin"          class="sidebar-item">🏠 Dashboard</a>
+      <a href="/admin_bookings" class="sidebar-item active">📋 Bookings</a>
+      <a href="/admin_halls"    class="sidebar-item">🏛️ Halls</a>
+      <a href="/admin_users"    class="sidebar-item">👥 Users</a>
+    </div>
+
+    <!-- ADMIN MAIN -->
+    <div class="admin-main">
+
+      <!-- Top App Bar — exact same structure as admin.html -->
+      <header class="sticky top-0 z-40 bg-[#f8f9fa] flex items-center justify-between px-8 py-4 shadow-sm border-b border-surface-container">
+        <div class="flex flex-col">
+          <h2 class="text-2xl font-headline font-extrabold text-primary tracking-tight">All Bookings</h2>
+          <p class="text-sm text-on-surface-variant font-medium">Manage and review all booking requests</p>
+        </div>
+        <div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-bold">
+            {% if admin_name %}{{ admin_name[:2] | upper }}{% else %}AD{% endif %}
+          </div>
+          <div class="hidden lg:block">
+            <p class="text-xs font-bold text-on-surface">{{ admin_name }}</p>
+            <p class="text-[10px] text-on-surface-variant">Administrator</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="p-8 space-y-8">
+
+        <!-- STATS GRID — same style as admin.html stat cards with icons -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+
+          <!-- Total -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-primary hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">book_online</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Total Bookings</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | length }}</h3>
+          </div>
+
+          <!-- Approved -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-[#2e7d32] hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-[#2e7d32]">
+                <span class="material-symbols-outlined">check_circle</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Approved</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | selectattr('status','equalto','approved') | list | length }}</h3>
+          </div>
+
+          <!-- Pending -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-[#e67e22] hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-[#e67e22]">
+                <span class="material-symbols-outlined">pending_actions</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Pending</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | selectattr('status','equalto','pending') | list | length }}</h3>
+          </div>
+
+          <!-- Rejected -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-error hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center text-error">
+                <span class="material-symbols-outlined">do_not_disturb_on</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Rejected</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | selectattr('status','equalto','rejected') | list | length }}</h3>
+          </div>
+
+          <!-- Cancelled -->
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-slate-400 hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                <span class="material-symbols-outlined">cancel</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Cancelled</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | selectattr('status','equalto','cancelled') | list | length }}</h3>
+          </div>
+
+        </section>
+
+        <!-- BOOKINGS TABLE — same card style as admin.html recent bookings -->
+        <section class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden">
+
+          <div class="px-6 py-5 border-b border-surface-container flex items-center justify-between">
+            <h3 class="text-lg font-headline font-bold">Booking Records</h3>
+            <span class="text-xs bg-surface-container-high px-4 py-2 rounded-lg font-bold text-secondary" id="rowCount">
+              {{ bookings | length }} bookings
+            </span>
+          </div>
+
+          <!-- Filter bar -->
+          <div class="px-6 py-4 border-b border-surface-container flex flex-wrap items-center gap-2">
+            <button onclick="filterTable('all',this)"
+              class="filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-surface-container-high bg-primary text-white transition-colors">All</button>
+            <button onclick="filterTable('pending',this)"
+              class="filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-surface-container-high bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Pending</button>
+            <button onclick="filterTable('approved',this)"
+              class="filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-surface-container-high bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Approved</button>
+            <button onclick="filterTable('rejected',this)"
+              class="filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-surface-container-high bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Rejected</button>
+            <button onclick="filterTable('cancelled',this)"
+              class="filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-surface-container-high bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Cancelled</button>
+            <div class="ml-auto relative">
+              <span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size:17px;">search</span>
+              <input type="text" placeholder="Search user, hall, purpose..."
+                oninput="searchTable(this.value)"
+                class="pl-8 pr-4 py-1.5 text-xs border border-surface-container-high rounded-lg bg-surface-container focus:outline-none focus:border-primary w-56">
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" id="bookingsTable">
+              <thead>
+                <tr class="bg-surface-container-low">
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">S. No</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">User</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Hall</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Date</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Time Slots</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Purpose</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Booked On</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container">
+                {% for b in bookings %}
+                <tr class="hover:bg-surface-bright transition-colors"
+                    data-status="{{ b.status }}"
+                    data-search="{{ b.user_name }} {{ b.hall_name }} {{ b.purpose }} {{ b.department }}">
+
+                  <td class="px-6 py-4 text-sm text-on-surface-variant font-bold row-num"></td>
+
+                  <td class="px-6 py-4">
+                    <p class="text-sm font-bold">{{ b.user_name }}</p>
+                    <p class="text-[11px] text-on-surface-variant">{{ b.department }}</p>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-lg">meeting_room</span>
+                      </div>
+                      <span class="text-sm font-semibold">{{ b.hall_name }}</span>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4 text-sm font-medium">{{ b.event_date.strftime('%d %b %Y') if b.event_date and b.event_date.strftime is defined else b.event_date }}</td>
+
+                  <td class="px-6 py-4 text-sm">{{ b.time_slots }}</td>
+
+                  <td class="px-6 py-4">
+                    <p class="text-sm text-on-surface-variant">{{ b.purpose | truncate(40, true, '…') }}</p>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    {% if b.status == 'pending' %}
+                      <span class="bg-orange-50 text-[#722b00] text-[10px] font-bold px-3 py-1 rounded-full border border-orange-100">PENDING</span>
+                    {% elif b.status == 'approved' %}
+                      <span class="bg-green-50 text-[#2e7d32] text-[10px] font-bold px-3 py-1 rounded-full border border-green-100">APPROVED</span>
+                    {% elif b.status == 'rejected' %}
+                      <span class="bg-red-50 text-error text-[10px] font-bold px-3 py-1 rounded-full border border-red-100">REJECTED</span>
+                    {% else %}
+                      <span class="bg-surface-container text-on-surface-variant text-[10px] font-bold px-3 py-1 rounded-full">CANCELLED</span>
+                    {% endif %}
+                  </td>
+
+                  <td class="px-6 py-4 text-sm text-on-surface-variant">{{ b.created_at.strftime('%d %b %Y') if b.created_at and b.created_at.strftime is defined else b.created_at }}</td>
+
+                  <!-- Action — same icon-button style as admin.html -->
+                  <td class="px-6 py-4 text-right">
+                    {% if b.status == 'pending' %}
+                      <div class="flex justify-end gap-2">
+                        <form method="POST" action="/approve_booking/{{ b.id }}" style="display:inline;"
+                              onsubmit="return confirm('Approve this booking request?')">
+                          <input type="hidden" name="remark" value="">
+                          <button type="submit"
+                            class="w-8 h-8 rounded-full flex items-center justify-center text-[#2e7d32] hover:bg-green-50 transition-colors"
+                            title="Approve">
+                            <span class="material-symbols-outlined">check</span>
+                          </button>
+                        </form>
+                        <button type="button" onclick="openReject({{ b.id }})"
+                          class="w-8 h-8 rounded-full flex items-center justify-center text-error hover:bg-red-50 transition-colors"
+                          title="Reject">
+                          <span class="material-symbols-outlined">close</span>
+                        </button>
+                      </div>
+                    {% else %}
+                      <button class="text-on-surface-variant material-symbols-outlined hover:text-primary transition-colors"
+                        title="{% if b.admin_remark %}Remark: {{ b.admin_remark }}{% else %}No remark{% endif %}"
+                        onclick="alert('Status: {{ b.status | upper }}\nRemark: {% if b.admin_remark %}{{ b.admin_remark }}{% else %}None{% endif %}')">
+                        more_vert
+                      </button>
+                    {% endif %}
+                  </td>
+
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="9" class="px-6 py-10 text-center text-on-surface-variant text-sm">
+                    No bookings found.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /page content -->
+
+      <footer>CDGI Seminar Hall Booking Portal</footer>
+
+    </div><!-- /admin-main -->
+  </div><!-- /layout -->
+
+  <!-- REJECT MODAL — exact same as admin.html -->
+  <div id="rejectModal">
+    <div style="background:#fff;border-radius:16px;padding:32px;width:100%;max-width:420px;margin:16px;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+      <h3 style="font-size:16px;font-weight:700;color:#ba1a1a;margin-bottom:8px;">Reject Booking</h3>
+      <p style="font-size:13px;color:#424752;margin-bottom:16px;">Enter the reason for rejection (optional).</p>
+      <form id="rejectForm" method="POST" action="">
+        <textarea name="remark" rows="3" placeholder="Reason for rejection..." style="width:100%;border:1px solid #c2c6d4;border-radius:8px;padding:10px;font-size:13px;resize:none;margin-bottom:16px;box-sizing:border-box;"></textarea>
+        <div style="display:flex;justify-content:flex-end;gap:10px;">
+          <button type="button" onclick="closeReject()" style="padding:8px 20px;border-radius:8px;border:none;background:#edeeef;font-weight:700;cursor:pointer;">Cancel</button>
+          <button type="submit" style="padding:8px 20px;border-radius:8px;border:none;background:#ba1a1a;color:#fff;font-weight:700;cursor:pointer;">Reject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    function applyFilters() {
+      const rows = document.querySelectorAll('#bookingsTable tbody tr[data-status]');
+      let visible = 0;
+      rows.forEach(row => {
+        const matchFilter = currentFilter === 'all' || row.dataset.status === currentFilter;
+        const matchSearch = currentSearch === '' || row.dataset.search.toLowerCase().includes(currentSearch);
+        const show = matchFilter && matchSearch;
+        row.style.display = show ? '' : 'none';
+        if (show) {
+          visible++;
+          row.querySelector('.row-num').textContent = visible;
+        }
+      });
+      document.getElementById('rowCount').textContent = visible + ' booking' + (visible !== 1 ? 's' : '');
+    }
+
+    // Init numbering on page load
+    applyFilters();
+
+    function filterTable(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('bg-primary', 'text-white');
+        b.classList.add('bg-surface-container', 'text-on-surface-variant');
+      });
+      btn.classList.add('bg-primary', 'text-white');
+      btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+      applyFilters();
+    }
+
+    function searchTable(val) {
+      currentSearch = val.toLowerCase().trim();
+      applyFilters();
+    }
+
+    function openReject(id) {
+      document.getElementById('rejectForm').action = '/reject_booking/' + id;
+      document.getElementById('rejectModal').classList.add('open');
+    }
+
+    function closeReject() {
+      document.getElementById('rejectModal').classList.remove('open');
+      document.getElementById('rejectForm').reset();
+    }
+
+    document.getElementById('rejectModal').addEventListener('click', function(e) {
+      if (e.target === this) closeReject();
+    });
+  </script>
+
+</body>
+</html>

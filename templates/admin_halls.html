@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Halls — CDGI Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-container": "#0056b3",
+            "on-secondary-container": "#475a7f",
+            "surface-container": "#edeeef",
+            "inverse-surface": "#2e3132",
+            "secondary": "#4c5e84",
+            "primary": "#003f87",
+            "surface-container-high": "#e7e8e9",
+            "on-background": "#191c1d",
+            "surface-container-low": "#f3f4f5",
+            "on-tertiary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-container": "#bbd0ff",
+            "surface-container-highest": "#e1e3e4",
+            "outline": "#727784",
+            "surface-variant": "#e1e3e4",
+            "surface-bright": "#f8f9fa",
+            "on-surface": "#191c1d",
+            "on-error-container": "#93000a",
+            "surface": "#f8f9fa",
+            "secondary-container": "#bfd2fd",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#424752",
+            "error": "#ba1a1a",
+            "background": "#f8f9fa",
+            "inverse-primary": "#acc7ff",
+            "surface-tint": "#115cb9",
+            "outline-variant": "#c2c6d4",
+            "inverse-on-surface": "#f0f1f2",
+            "primary-fixed": "#d7e2ff",
+            "primary-fixed-dim": "#acc7ff",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f4f6fb; min-height: 100vh; display: flex; flex-direction: column; }
+    .layout { display: flex; align-items: flex-start; flex: 1; }
+    .sidebar { width: 220px; background: white; padding: 20px; min-height: calc(100vh - 73px); border-right: 1px solid #eee; flex-shrink: 0; }
+    .sidebar-item { display: block; padding: 10px; margin-bottom: 10px; color: #555; text-decoration: none; border-radius: 6px; font-size: 18px; }
+    .sidebar-item:hover { background: #f1f5f9; }
+    .sidebar-item.active { background: #e0f2fe; color: #1e3a5f; border-left: 4px solid #1e3a5f; padding-left: 8px; font-weight: 500; }
+    .admin-main { flex: 1; min-width: 0; }
+    footer { text-align: center; padding: 15px; background: white; margin-top: auto; border-top: 1px solid #e5e7eb; font-size: 14px; color: #555; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+
+  <!-- NAVBAR -->
+  <header class="w-full sticky top-0 z-50 flex items-center justify-between px-8 py-4 shadow-md" style="background:#1e3a5f;">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1;">account_balance</span>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white leading-tight">Admin Central</h1>
+        <p class="text-[10px] uppercase tracking-widest text-blue-200 font-bold">CDGI BOOKIT</p>
+      </div>
+    </div>
+    <form action="/logout" method="POST">
+      <button type="submit" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors border border-white/20">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Logout
+      </button>
+    </form>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <a href="/admin"          class="sidebar-item">🏠 Dashboard</a>
+      <a href="/admin_bookings" class="sidebar-item">📋 Bookings</a>
+      <a href="/admin_halls"    class="sidebar-item active">🏛️ Halls</a>
+      <a href="/admin_users"    class="sidebar-item">👥 Users</a>
+    </div>
+
+    <!-- ADMIN MAIN -->
+    <div class="admin-main">
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div style="padding: 12px 24px 0;">
+            {% for category, message in messages %}
+              <div style="background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:8px;font-size:14px;">
+                ⚠️ {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Top App Bar -->
+      <header class="sticky top-0 z-40 bg-[#f8f9fa] flex items-center justify-between px-8 py-4 shadow-sm border-b border-surface-container">
+        <div class="flex flex-col">
+          <h2 class="text-2xl font-headline font-extrabold text-primary tracking-tight">Seminar Halls</h2>
+          <p class="text-sm text-on-surface-variant font-medium">View all available venues</p>
+        </div>
+        <div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-bold">
+            {% if admin_name %}{{ admin_name[:2] | upper }}{% else %}AD{% endif %}
+          </div>
+          <div class="hidden lg:block">
+            <p class="text-xs font-bold text-on-surface">{{ admin_name }}</p>
+            <p class="text-[10px] text-on-surface-variant">Administrator</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="p-8 space-y-8">
+
+        <!-- STATS CARDS -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-primary hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">meeting_room</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Total Halls</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ halls | length }}</h3>
+          </div>
+
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-[#2e7d32] hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-[#2e7d32]">
+                <span class="material-symbols-outlined">check_circle</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Available</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ halls | selectattr('is_available', 'equalto', 1) | list | length }}</h3>
+          </div>
+
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-error hover:shadow-md transition-shadow">
+            <div class="mb-4">
+              <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center text-error">
+                <span class="material-symbols-outlined">do_not_disturb_on</span>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-xs uppercase tracking-wider font-bold">Unavailable</p>
+            <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ halls | selectattr('is_available', 'equalto', 0) | list | length }}</h3>
+          </div>
+
+        </section>
+
+        <!-- HALLS TABLE -->
+        <section class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden">
+
+          <div class="px-6 py-5 border-b border-surface-container flex items-center justify-between">
+            <h3 class="text-lg font-headline font-bold">Hall Directory</h3>
+            <button onclick="document.getElementById('addHallModal').classList.remove('hidden')" class="flex items-center gap-2 bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-primary-container transition-colors">
+              <span class="material-symbols-outlined text-base">add</span> Add Hall
+            </button>
+            <span class="text-xs bg-surface-container-high px-4 py-2 rounded-lg font-bold text-secondary">
+              {{ halls | length }} hall{% if halls | length != 1 %}s{% endif %}
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-container-low">
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">S. No</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Hall</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Capacity</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Location</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container">
+                {% for hall in halls %}
+                <tr class="hover:bg-surface-bright transition-colors">
+
+                  <td class="px-6 py-4 text-sm text-on-surface-variant font-bold">{{ loop.index }}</td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-xl leading-none">
+                        {{ hall.icon }}
+                      </div>
+                      <p class="text-sm font-bold text-on-surface">{{ hall.name }}</p>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-on-surface-variant" style="font-size:16px;">groups</span>
+                      <span class="text-sm font-semibold">{{ hall.capacity }} seats</span>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-on-surface-variant" style="font-size:16px;">location_on</span>
+                      <span class="text-sm text-on-surface-variant">{{ hall.location }}</span>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    {% if hall.is_available %}
+                      <span class="bg-green-50 text-[#2e7d32] text-[10px] font-bold px-3 py-1 rounded-full border border-green-100">AVAILABLE</span>
+                    {% else %}
+                      <span class="bg-red-50 text-error text-[10px] font-bold px-3 py-1 rounded-full border border-red-100">UNAVAILABLE</span>
+                    {% endif %}
+                  </td>
+
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <!-- Edit button — opens modal prefilled with hall data -->
+                      <button onclick="openEditModal({{ hall.id }}, '{{ hall.name }}', {{ hall.capacity }}, '{{ hall.location }}', '{{ hall.icon }}')"
+                              class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary-fixed text-primary hover:bg-primary hover:text-white transition-colors">
+                        Edit
+                      </button>
+                      <!-- Toggle availability -->
+                      <form action="/toggle_hall/{{ hall.id }}" method="POST">
+                        <button type="submit"
+                                class="text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors
+                                {% if hall.is_available %}border-error text-error hover:bg-error hover:text-white{% else %}border-[#2e7d32] text-[#2e7d32] hover:bg-[#2e7d32] hover:text-white{% endif %}">
+                          {% if hall.is_available %}Disable{% else %}Enable{% endif %}
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="5" class="px-6 py-10 text-center text-on-surface-variant text-sm">
+                    No halls found.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+      </div><!-- /page content -->
+
+      <footer>CDGI Seminar Hall Booking Portal</footer>
+
+    </div><!-- /admin-main -->
+  </div><!-- /layout -->
+
+
+  <!-- ADD HALL MODAL -->
+  <div id="addHallModal" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(0,0,0,0.45);">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+      <h3 class="text-xl font-headline font-bold text-primary mb-6">Add New Hall</h3>
+      <form action="/add_hall" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Hall Name</label>
+          <input type="text" name="name" required class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Capacity</label>
+          <input type="number" name="capacity" min="1" required class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Location</label>
+          <input type="text" name="location" required class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Icon (emoji)</label>
+          <input type="text" name="icon" value="🏛️" class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="flex-1 bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary-container transition-colors">Add Hall</button>
+          <button type="button" onclick="document.getElementById('addHallModal').classList.add('hidden')" class="flex-1 border border-outline text-on-surface-variant font-semibold py-2 rounded-lg hover:bg-surface-container transition-colors">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT HALL MODAL -->
+  <div id="editHallModal" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(0,0,0,0.45);">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+      <h3 class="text-xl font-headline font-bold text-primary mb-6">Edit Hall</h3>
+      <form id="editHallForm" action="" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Hall Name</label>
+          <input type="text" name="name" id="editName" required class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Capacity</label>
+          <input type="number" name="capacity" id="editCapacity" min="1" required class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Location</label>
+          <input type="text" name="location" id="editLocation" required class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Icon (emoji)</label>
+          <input type="text" name="icon" id="editIcon" class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="flex-1 bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary-container transition-colors">Save Changes</button>
+          <button type="button" onclick="document.getElementById('editHallModal').classList.add('hidden')" class="flex-1 border border-outline text-on-surface-variant font-semibold py-2 rounded-lg hover:bg-surface-container transition-colors">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openEditModal(id, name, capacity, location, icon) {
+      document.getElementById('editHallForm').action = '/edit_hall/' + id;
+      document.getElementById('editName').value     = name;
+      document.getElementById('editCapacity').value = capacity;
+      document.getElementById('editLocation').value = location;
+      document.getElementById('editIcon').value     = icon;
+      document.getElementById('editHallModal').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

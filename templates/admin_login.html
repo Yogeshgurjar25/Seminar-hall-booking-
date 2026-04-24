@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login - CDGI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">CDGI Portal</div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </div>
+</nav>
+
+<!-- Login Box -->
+<div class="container">
+
+  <div class="login-box">
+    <h1>Welcome</h1>
+    <p>Login to manage seminar hall booking</p>
+
+    <form method="POST" action="/admin_login">
+      {% if error %}
+        <p style="color:red;">{{ error }}</p>
+      {% endif %}
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter admin email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter password" required>
+
+      <button type="submit">Admin Login</button>
+    </form>
+
+    <p class="register">
+      Not admin? <a href="/login">User Login</a>
+    </p>
+
+  </div>  <!-- closes .login-box -->
+</div>    <!-- closes .container -->
+
+<footer>
+  CDGI Seminar Hall Booking Portal
+</footer>
+
+</body>
+</html>
