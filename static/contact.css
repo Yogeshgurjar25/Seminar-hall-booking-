@@ -29,6 +29,19 @@ nav a {
     transition: color 0.2s;
 }
 
+nav button {
+    color: rgba(255,255,255,0.8);
+    background: none;
+    border: none;
+    margin-left: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+}
+nav button:hover {
+    color: #fff;
+}
 nav a:hover {
     color: white;
 }

@@ -18,7 +18,14 @@
     <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/contact" class="active">Contact</a>
-    <a href="/login">Login</a>
+    {% if session.get('user_id') %}
+      <a href="/dashboard">Dashboard</a>
+      <form method="POST" action="/logout" style="display:inline;">
+        <button type="submit">Logout</button>
+      </form>
+    {% else %}
+      <a href="/login">Login</a>
+    {% endif %}
   </div>
 </nav>
 
