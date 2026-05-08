@@ -4,3 +4,4 @@ flask-mail
 werkzeug
 mysqlclient
 python-dotenv
+gunicorn
