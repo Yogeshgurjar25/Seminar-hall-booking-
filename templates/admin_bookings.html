@@ -70,7 +70,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', sans-serif; background: #f4f6fb; min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* NAVBAR — exact same as admin.html */
     nav { background: #1e3a5f; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
     .logo { color: white; font-weight: 600; font-size: 24px; letter-spacing: 1px; }
     .logo span { color: #60a5fa; font-weight: 700; }
@@ -79,25 +78,21 @@
     .nav-links a:hover { color: #fff; }
     .logout-btn { background: #e74c3c; padding: 8px 20px; border-radius: 6px; color: white !important; font-weight: 500; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 16px; line-height: 1.5; margin-left: 16px; }
 
-    /* LAYOUT */
     .layout { display: flex; align-items: flex-start; flex: 1; }
 
-    /* SIDEBAR — exact same as admin.html */
     .sidebar { width: 220px; background: white; padding: 20px; min-height: calc(100vh - 73px); border-right: 1px solid #eee; flex-shrink: 0; }
     .sidebar-item { display: block; padding: 10px; margin-bottom: 10px; color: #555; text-decoration: none; border-radius: 6px; font-size: 18px; }
     .sidebar-item:hover { background: #f1f5f9; }
     .sidebar-item.active { background: #e0f2fe; color: #1e3a5f; border-left: 4px solid #1e3a5f; padding-left: 8px; font-weight: 500; }
 
-    /* ADMIN MAIN */
     .admin-main { flex: 1; min-width: 0; }
 
-    /* footer — exact same as admin.html */
     footer { text-align: center; padding: 15px; background: white; margin-top: auto; border-top: 1px solid #e5e7eb; font-size: 14px; color: #555; letter-spacing: 0.5px; }
   </style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
 
-  <!-- NAVBAR — exact same as admin.html -->
+  <!-- NAVBAR -->
   <header class="w-full sticky top-0 z-50 flex items-center justify-between px-8 py-4 shadow-md" style="background:#1e3a5f;">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
@@ -118,7 +113,7 @@
 
   <div class="layout">
 
-    <!-- SIDEBAR — exact same as admin.html -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
       <a href="/admin"          class="sidebar-item">🏠 Dashboard</a>
       <a href="/admin_bookings" class="sidebar-item active">📋 Bookings</a>
@@ -129,7 +124,7 @@
     <!-- ADMIN MAIN -->
     <div class="admin-main">
 
-      <!-- Top App Bar — exact same structure as admin.html -->
+      <!-- Top App Bar -->
       <header class="sticky top-0 z-40 bg-[#f8f9fa] flex items-center justify-between px-8 py-4 shadow-sm border-b border-surface-container">
         <div class="flex flex-col">
           <h2 class="text-2xl font-headline font-extrabold text-primary tracking-tight">All Bookings</h2>
@@ -149,10 +144,9 @@
       <!-- Page Content -->
       <div class="p-8 space-y-8">
 
-        <!-- STATS GRID — same style as admin.html stat cards with icons -->
+        <!-- STATS GRID -->
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
 
-          <!-- Total -->
           <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-primary hover:shadow-md transition-shadow">
             <div class="mb-4">
               <div class="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
@@ -163,7 +157,6 @@
             <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | length }}</h3>
           </div>
 
-          <!-- Approved -->
           <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-[#2e7d32] hover:shadow-md transition-shadow">
             <div class="mb-4">
               <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-[#2e7d32]">
@@ -174,7 +167,6 @@
             <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | selectattr('status','equalto','approved') | list | length }}</h3>
           </div>
 
-          <!-- Pending -->
           <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-[#e67e22] hover:shadow-md transition-shadow">
             <div class="mb-4">
               <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-[#e67e22]">
@@ -185,7 +177,6 @@
             <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | selectattr('status','equalto','pending') | list | length }}</h3>
           </div>
 
-          <!-- Rejected -->
           <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-error hover:shadow-md transition-shadow">
             <div class="mb-4">
               <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center text-error">
@@ -196,7 +187,6 @@
             <h3 class="text-3xl font-headline font-extrabold text-on-surface mt-1">{{ bookings | selectattr('status','equalto','rejected') | list | length }}</h3>
           </div>
 
-          <!-- Cancelled -->
           <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-slate-400 hover:shadow-md transition-shadow">
             <div class="mb-4">
               <div class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
@@ -209,7 +199,7 @@
 
         </section>
 
-        <!-- BOOKINGS TABLE — same card style as admin.html recent bookings -->
+        <!-- BOOKINGS TABLE -->
         <section class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden">
 
           <div class="px-6 py-5 border-b border-surface-container flex items-center justify-between">
@@ -231,11 +221,23 @@
               class="filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-surface-container-high bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Rejected</button>
             <button onclick="filterTable('cancelled',this)"
               class="filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-surface-container-high bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Cancelled</button>
+
+            <!-- ✅ FIX 1: Department dropdown — auto-populated from bookings data -->
+            <select onchange="filterDept(this.value)" id="deptFilter"
+              class="px-3 py-1.5 text-xs border border-surface-container-high rounded-lg bg-surface-container focus:outline-none focus:border-primary">
+              <option value="">All Departments</option>
+              {% set departments = bookings | map(attribute='department') | select | unique | list %}
+              {% for dept in departments | sort %}
+                <option value="{{ dept | lower }}">{{ dept }}</option>
+              {% endfor %}
+            </select>
+
             <div class="ml-auto relative">
               <span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size:17px;">search</span>
-              <input type="text" placeholder="Search user, hall, purpose..."
+              <!-- ✅ FIX 2: Placeholder updated -->
+              <input type="text" placeholder="Search user, hall, purpose, department..."
                 oninput="searchTable(this.value)"
-                class="pl-8 pr-4 py-1.5 text-xs border border-surface-container-high rounded-lg bg-surface-container focus:outline-none focus:border-primary w-56">
+                class="pl-8 pr-4 py-1.5 text-xs border border-surface-container-high rounded-lg bg-surface-container focus:outline-none focus:border-primary w-72">
             </div>
           </div>
 
@@ -258,13 +260,16 @@
                 {% for b in bookings %}
                 <tr class="hover:bg-surface-bright transition-colors"
                     data-status="{{ b.status }}"
-                    data-search="{{ b.user_name }} {{ b.hall_name }} {{ b.purpose }} {{ b.department }}">
+                    data-search="{{ b.user_name | default('') | lower }} {{ b.hall_name | default('') | lower }} {{ b.purpose | default('') | lower }} {{ b.department | default('') | lower }}"
+                    data-dept="{{ b.department | default('') | lower }}">
+                  <!-- ✅ FIX 3: data-search mein sab fields ke liye default('') added -->
+                  <!-- ✅ FIX 4: data-dept attribute naya add kiya for exact dept filtering -->
 
                   <td class="px-6 py-4 text-sm text-on-surface-variant font-bold row-num"></td>
 
                   <td class="px-6 py-4">
                     <p class="text-sm font-bold">{{ b.user_name }}</p>
-                    <p class="text-[11px] text-on-surface-variant">{{ b.department }}</p>
+                    <p class="text-[11px] text-on-surface-variant">{{ b.department | default('—') }}</p>
                   </td>
 
                   <td class="px-6 py-4">
@@ -298,7 +303,6 @@
 
                   <td class="px-6 py-4 text-sm text-on-surface-variant">{{ b.created_at.strftime('%d %b %Y') if b.created_at and b.created_at.strftime is defined else b.created_at }}</td>
 
-                  <!-- Action — same icon-button style as admin.html -->
                   <td class="px-6 py-4 text-right">
                     {% if b.status == 'pending' %}
                       <div class="flex justify-end gap-2">
@@ -346,7 +350,7 @@
     </div><!-- /admin-main -->
   </div><!-- /layout -->
 
-  <!-- REJECT MODAL — exact same as admin.html -->
+  <!-- REJECT MODAL -->
   <div id="rejectModal">
     <div style="background:#fff;border-radius:16px;padding:32px;width:100%;max-width:420px;margin:16px;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
       <h3 style="font-size:16px;font-weight:700;color:#ba1a1a;margin-bottom:8px;">Reject Booking</h3>
@@ -364,14 +368,16 @@
   <script>
     let currentFilter = 'all';
     let currentSearch = '';
+    let currentDept   = '';  // ✅ FIX 5: department filter state
 
     function applyFilters() {
       const rows = document.querySelectorAll('#bookingsTable tbody tr[data-status]');
       let visible = 0;
       rows.forEach(row => {
         const matchFilter = currentFilter === 'all' || row.dataset.status === currentFilter;
-        const matchSearch = currentSearch === '' || row.dataset.search.toLowerCase().includes(currentSearch);
-        const show = matchFilter && matchSearch;
+        const matchSearch = currentSearch === '' || row.dataset.search.includes(currentSearch);
+        const matchDept   = currentDept === '' || row.dataset.dept === currentDept;  // ✅ FIX 6
+        const show = matchFilter && matchSearch && matchDept;
         row.style.display = show ? '' : 'none';
         if (show) {
           visible++;
@@ -381,7 +387,6 @@
       document.getElementById('rowCount').textContent = visible + ' booking' + (visible !== 1 ? 's' : '');
     }
 
-    // Init numbering on page load
     applyFilters();
 
     function filterTable(status, btn) {
@@ -397,6 +402,12 @@
 
     function searchTable(val) {
       currentSearch = val.toLowerCase().trim();
+      applyFilters();
+    }
+
+    // ✅ FIX 7: Department dropdown filter function
+    function filterDept(val) {
+      currentDept = val.toLowerCase().trim();
       applyFilters();
     }
 
