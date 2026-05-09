@@ -52,9 +52,8 @@ def send_email(to, subject, body):
     try:
         msg = Message(subject=subject, recipients=[to], body=body)
         mail.send(msg)
-    except Exception as e:
-        app.logger.error(f"Email send failed to {to}: {e}")
-        return
+    except Exception:
+        app.logger.error(f"Email send failed to {to}")
 
 
 
