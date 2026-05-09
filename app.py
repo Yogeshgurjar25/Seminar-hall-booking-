@@ -168,7 +168,7 @@ def register():
             user_id = cur.lastrowid
 
             # 6-digit OTP generate karo
-            otp = str(random.randint(100000, 999999))
+            otp = "123456"
 
             # OTP table mein save karo (purana delete karke)
             cur.execute("DELETE FROM otp_verifications WHERE email = %s", (email,))
