@@ -10,7 +10,6 @@
 # ================================================================
 
 from flask import Flask, render_template, request, redirect, session, jsonify
-from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -39,22 +38,23 @@ app.config['MYSQL_CHARSET']     = 'utf8mb4'
 mysql = MySQL(app)
 
 # ── Gmail / Mail Config ────────────────────────────────────────
-app.config['MAIL_SERVER']         = 'smtp.gmail.com'
-app.config['MAIL_PORT']           = 465
-app.config['MAIL_USE_TLS']        = False
-app.config['MAIL_USE_SSL']        = True
-app.config['MAIL_USERNAME']       = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD']       = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = ('CDGI BookIt', os.environ.get('MAIL_USERNAME'))
-
-mail = Mail(app)
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+MAIL_FROM = os.environ.get('MAIL_USERNAME')
 
 def send_email(to, subject, body):
     try:
-        msg = Message(subject=subject, recipients=[to], body=body)
-        mail.send(msg)
+        import sendgrid
+        from sendgrid.helpers.mail import Mail
+        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
+        message = Mail(
+            from_email=MAIL_FROM,
+            to_emails=to,
+            subject=subject,
+            plain_text_content=body
+        )
+        sg.send(message)
     except Exception as e:
-        app.logger.error(f"Email send failed to {to}: {e}")
+        app.logger.error(f"Email failed: {e}")
         return
 
 
@@ -170,7 +170,7 @@ def register():
             user_id = cur.lastrowid
 
             # 6-digit OTP generate karo
-            otp = "123456"
+            otp = str(random.randint(100000, 999999))
 
             # OTP table mein save karo (purana delete karke)
             cur.execute("DELETE FROM otp_verifications WHERE email = %s", (email,))
