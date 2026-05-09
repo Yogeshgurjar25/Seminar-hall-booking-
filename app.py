@@ -40,8 +40,9 @@ mysql = MySQL(app)
 
 # ── Gmail / Mail Config ────────────────────────────────────────
 app.config['MAIL_SERVER']         = 'smtp.gmail.com'
-app.config['MAIL_PORT']           = 587
-app.config['MAIL_USE_TLS']        = True
+app.config['MAIL_PORT']           = 465
+app.config['MAIL_USE_TLS']        = False
+app.config['MAIL_USE_SSL']        = True
 app.config['MAIL_USERNAME']       = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD']       = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = ('CDGI BookIt', os.environ.get('MAIL_USERNAME'))
@@ -49,8 +50,12 @@ app.config['MAIL_DEFAULT_SENDER'] = ('CDGI BookIt', os.environ.get('MAIL_USERNAM
 mail = Mail(app)
 
 def send_email(to, subject, body):
-    app.logger.info(f"Email skipped: {to}")
-    return
+    try:
+        msg = Message(subject=subject, recipients=[to], body=body)
+        mail.send(msg)
+    except Exception as e:
+        app.logger.error(f"Email send failed to {to}: {e}")
+        return
 
 
 
