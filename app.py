@@ -55,6 +55,7 @@ def send_email(to, subject, body):
         mail.send(msg)
     except Exception as e:
         app.logger.error(f"Email send failed to {to}: {e}")
+        return
 
 
 
