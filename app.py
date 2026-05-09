@@ -49,11 +49,8 @@ app.config['MAIL_DEFAULT_SENDER'] = ('CDGI BookIt', os.environ.get('MAIL_USERNAM
 mail = Mail(app)
 
 def send_email(to, subject, body):
-    try:
-        msg = Message(subject=subject, recipients=[to], body=body)
-        mail.send(msg)
-    except Exception:
-        app.logger.error(f"Email send failed to {to}")
+    app.logger.info(f"Email skipped: {to}")
+    return
 
 
 
