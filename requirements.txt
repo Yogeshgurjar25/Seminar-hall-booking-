@@ -1,8 +1,8 @@
 flask
 flask-mysqldb
-flask-mail
 werkzeug
 mysqlclient
 python-dotenv
 gunicorn
 requests
+resend

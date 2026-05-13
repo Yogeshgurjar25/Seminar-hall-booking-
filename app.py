@@ -39,49 +39,28 @@ app.config['MYSQL_CHARSET']     = 'utf8mb4'
 mysql = MySQL(app)
 
 # ── Gmail OAuth Config ────────────────────────────────────────
-GMAIL_CLIENT_ID = os.environ.get('GMAIL_CLIENT_ID')
-GMAIL_CLIENT_SECRET = os.environ.get('GMAIL_CLIENT_SECRET')
-GMAIL_REFRESH_TOKEN = os.environ.get('GMAIL_REFRESH_TOKEN')
-GMAIL_FROM = os.environ.get('MAIL_USERNAME')
 
 def send_email(to, subject, body):
     try:
-        import smtplib
-        from email.mime.text import MIMEText
-        from email.mime.multipart import MIMEMultipart
         import requests
-
-        # Access token lo
-        token_url = "https://oauth2.googleapis.com/token"
-        token_data = {
-            "client_id": GMAIL_CLIENT_ID,
-            "client_secret": GMAIL_CLIENT_SECRET,
-            "refresh_token": GMAIL_REFRESH_TOKEN,
-            "grant_type": "refresh_token"
-        }
-        token_response = requests.post(token_url, data=token_data)
-        access_token = token_response.json().get("access_token")
-
-        # Email banao
-        msg = MIMEMultipart()
-        msg['From'] = f"CDGI BookIt <{GMAIL_FROM}>"
-        msg['To'] = to
-        msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
-
-        # Gmail SMTP se bhejo
-        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
-        server.ehlo()
-        server.starttls()
-        server.docmd('AUTH', 'XOAUTH2 ' + __import__('base64').b64encode(
-            f"user={GMAIL_FROM}\x01auth=Bearer {access_token}\x01\x01".encode()
-        ).decode())
-        server.sendmail(GMAIL_FROM, to, msg.as_string())
-        server.quit()
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {os.environ.get('RESEND_API_KEY')}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "from": "CDGI BookIt <onboarding@resend.dev>",
+                "to": to,
+                "subject": subject,
+                "text": body
+            },
+            timeout=10
+        )
+        app.logger.info(f"Email sent: {response.status_code}")
     except Exception as e:
         app.logger.error(f"Email failed: {e}")
         return
-
 
 # ================================================================
 #  DECORATORS — Login check karne ke liye
