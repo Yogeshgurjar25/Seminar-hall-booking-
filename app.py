@@ -17,6 +17,7 @@ from datetime import date, datetime
 from dotenv import load_dotenv
 import random
 import os
+import requests
 
 # .env file se credentials load karo
 load_dotenv()
@@ -37,26 +38,49 @@ app.config['MYSQL_CHARSET']     = 'utf8mb4'
 
 mysql = MySQL(app)
 
-# ── Gmail / Mail Config ────────────────────────────────────────
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
-MAIL_FROM = os.environ.get('MAIL_USERNAME')
+# ── Gmail OAuth Config ────────────────────────────────────────
+GMAIL_CLIENT_ID = os.environ.get('GMAIL_CLIENT_ID')
+GMAIL_CLIENT_SECRET = os.environ.get('GMAIL_CLIENT_SECRET')
+GMAIL_REFRESH_TOKEN = os.environ.get('GMAIL_REFRESH_TOKEN')
+GMAIL_FROM = os.environ.get('MAIL_USERNAME')
 
 def send_email(to, subject, body):
     try:
-        import sendgrid
-        from sendgrid.helpers.mail import Mail
-        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
-        message = Mail(
-            from_email=MAIL_FROM,
-            to_emails=to,
-            subject=subject,
-            plain_text_content=body
-        )
-        sg.send(message)
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+        import requests
+
+        # Access token lo
+        token_url = "https://oauth2.googleapis.com/token"
+        token_data = {
+            "client_id": GMAIL_CLIENT_ID,
+            "client_secret": GMAIL_CLIENT_SECRET,
+            "refresh_token": GMAIL_REFRESH_TOKEN,
+            "grant_type": "refresh_token"
+        }
+        token_response = requests.post(token_url, data=token_data)
+        access_token = token_response.json().get("access_token")
+
+        # Email banao
+        msg = MIMEMultipart()
+        msg['From'] = f"CDGI BookIt <{GMAIL_FROM}>"
+        msg['To'] = to
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+
+        # Gmail SMTP se bhejo
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.ehlo()
+        server.starttls()
+        server.docmd('AUTH', 'XOAUTH2 ' + __import__('base64').b64encode(
+            f"user={GMAIL_FROM}\x01auth=Bearer {access_token}\x01\x01".encode()
+        ).decode())
+        server.sendmail(GMAIL_FROM, to, msg.as_string())
+        server.quit()
     except Exception as e:
         app.logger.error(f"Email failed: {e}")
         return
-
 
 
 # ================================================================

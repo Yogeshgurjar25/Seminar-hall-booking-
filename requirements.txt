@@ -5,4 +5,4 @@ werkzeug
 mysqlclient
 python-dotenv
 gunicorn
-sendgrid
+requests
