@@ -42,11 +42,12 @@ mysql = MySQL(app)
 
 def send_email(to, subject, body):
     try:
-        import requests
+        api_key = os.environ.get('RESEND_API_KEY')
+        app.logger.info(f"API Key: {api_key[:10] if api_key else 'NOT FOUND'}")
         response = requests.post(
             "https://api.resend.com/emails",
             headers={
-                "Authorization": f"Bearer {os.environ.get('RESEND_API_KEY')}",
+                "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json"
             },
             json={
@@ -57,7 +58,7 @@ def send_email(to, subject, body):
             },
             timeout=10
         )
-        app.logger.info(f"Email sent: {response.status_code}")
+        app.logger.info(f"Email sent: {response.status_code} - {response.text}")
     except Exception as e:
         app.logger.error(f"Email failed: {e}")
         return
