@@ -70,7 +70,7 @@ def send_email(to, subject, body):
         msg.attach(MIMEText(body, 'plain'))
 
         # Gmail SMTP se bhejo
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
         server.ehlo()
         server.starttls()
         server.docmd('AUTH', 'XOAUTH2 ' + __import__('base64').b64encode(
