@@ -175,6 +175,9 @@ def register():
 
             # 6-digit OTP generate karo
             otp = str(random.randint(100000, 999999))
+            app.logger.info(f"Sending email to: {email}")
+            send_email(...)
+            app.logger.info(f"Email function completed")
 
             # OTP table mein save karo (purana delete karke)
             cur.execute("DELETE FROM otp_verifications WHERE email = %s", (email,))
@@ -186,6 +189,7 @@ def register():
             cur.close()
 
             # OTP email bhejo
+            app.logger.info(f"About to send email to: {email}")
             send_email(
                 to=email,
                 subject="Verify your CDGI BookIt account — OTP",
