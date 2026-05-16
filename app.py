@@ -134,8 +134,8 @@ def register():
         if len(name) < 3:
             return render_template('register.html', error="Name too short")
 
-        if not email.endswith('@cdgi.edu.in'):
-            return render_template('register.html', error="Use college email only (@cdgi.edu.in)")
+        # if not email.endswith('@cdgi.edu.in'):
+        #     return render_template('register.html', error="Use college email only (@cdgi.edu.in)")
 
         if len(phone) != 10 or not phone.isdigit():
             return render_template('register.html', error="Invalid phone number (10 digits)")
