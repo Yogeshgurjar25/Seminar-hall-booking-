@@ -310,15 +310,15 @@
                               onsubmit="return confirm('Approve this booking request?')">
                           <input type="hidden" name="remark" value="">
                           <button type="submit"
-                            class="w-8 h-8 rounded-full flex items-center justify-center text-[#2e7d32] hover:bg-green-50 transition-colors"
+                            class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-50 text-[#2e7d32] hover:bg-green-100 transition-colors text-xs font-bold border border-green-200"
                             title="Approve">
-                            <span class="material-symbols-outlined">check</span>
+                            <span class="material-symbols-outlined text-base">check</span> Approve
                           </button>
                         </form>
                         <button type="button" onclick="openReject({{ b.id }})"
-                          class="w-8 h-8 rounded-full flex items-center justify-center text-error hover:bg-red-50 transition-colors"
+                          class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-50 text-error hover:bg-red-100 transition-colors text-xs font-bold border border-red-200"
                           title="Reject">
-                          <span class="material-symbols-outlined">close</span>
+                          <span class="material-symbols-outlined text-base">close</span> Reject
                         </button>
                       </div>
                     {% else %}
