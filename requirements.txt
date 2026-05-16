@@ -5,4 +5,3 @@ mysqlclient
 python-dotenv
 gunicorn
 requests
-resend

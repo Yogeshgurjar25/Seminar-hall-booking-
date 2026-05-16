@@ -38,27 +38,25 @@ app.config['MYSQL_CHARSET']     = 'utf8mb4'
 
 mysql = MySQL(app)
 
-# ── Gmail OAuth Config ────────────────────────────────────────
+# ── Gmail  ────────────────────────────────────────
 
 def send_email(to, subject, body):
     try:
-        api_key = os.environ.get('RESEND_API_KEY')
-        app.logger.info(f"API Key: {api_key[:10] if api_key else 'NOT FOUND'}")
         response = requests.post(
-            "https://api.resend.com/emails",
+            "https://api.sendgrid.com/v3/mail/send",
             headers={
-                "Authorization": f"Bearer {api_key}",
+                "Authorization": f"Bearer {os.environ.get('SENDGRID_API_KEY')}",
                 "Content-Type": "application/json"
             },
             json={
-                "from": "CDGI BookIt <onboarding@resend.dev>",
-                "to": to,
+                "personalizations": [{"to": [{"email": to}]}],
+                "from": {"email": "cdgibookit@gmail.com", "name": "CDGI BookIt"},
                 "subject": subject,
-                "text": body
+                "content": [{"type": "text/plain", "value": body}]
             },
             timeout=10
         )
-        app.logger.info(f"Email sent: {response.status_code} - {response.text}")
+        app.logger.info(f"Email sent: {response.status_code}")
     except Exception as e:
         app.logger.error(f"Email failed: {e}")
         return
@@ -175,9 +173,6 @@ def register():
 
             # 6-digit OTP generate karo
             otp = str(random.randint(100000, 999999))
-            app.logger.info(f"Sending email to: {email}")
-            send_email(...)
-            app.logger.info(f"Email function completed")
 
             # OTP table mein save karo (purana delete karke)
             cur.execute("DELETE FROM otp_verifications WHERE email = %s", (email,))
