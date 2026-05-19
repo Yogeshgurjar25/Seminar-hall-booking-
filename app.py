@@ -19,6 +19,10 @@ import random
 import os
 import requests
 
+import csv
+import io
+from flask import Response
+
 # .env file se credentials load karo
 load_dotenv()
 
@@ -1183,6 +1187,42 @@ def admin_bookings():
                            admin_name=session.get('admin_name',''))
 
 # ================================================================
+
+@app.route('/export_bookings_csv')
+@admin_required
+def export_bookings_csv():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            SELECT b.id, u.name as user_name, u.email, u.department,
+                   h.name as hall_name, b.event_date, b.time_slots,
+                   b.purpose, b.status, b.created_at
+            FROM bookings b
+            JOIN users u ON b.user_id = u.id
+            JOIN halls h ON b.hall_id = h.id
+            ORDER BY b.created_at DESC
+        """)
+        bookings = cur.fetchall()
+        cur.close()
+
+        output = io.StringIO()
+        writer = csv.writer(output)
+        writer.writerow(['ID', 'User Name', 'Email', 'Department', 'Hall', 'Event Date', 'Time Slots', 'Purpose', 'Status', 'Booked On'])
+        for b in bookings:
+            writer.writerow([b['id'], b['user_name'], b['email'], b['department'],
+                           b['hall_name'], b['event_date'], b['time_slots'],
+                           b['purpose'], b['status'], b['created_at']])
+
+        output.seek(0)
+        return Response(
+            output.getvalue(),
+            mimetype='text/csv',
+            headers={"Content-Disposition": "attachment;filename=bookings.csv"}
+        )
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# ========================================================================================
 
 if __name__ == "__main__":
     app.run(debug=False)
