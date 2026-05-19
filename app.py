@@ -1222,6 +1222,46 @@ def export_bookings_csv():
     except Exception as e:
         return f"Error: {str(e)}"
 
+@app.route('/export_bookings_pdf')
+@admin_required
+def export_bookings_pdf():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            SELECT b.id, u.name as user_name, u.email, u.department,
+                   h.name as hall_name, b.event_date, b.time_slots,
+                   b.purpose, b.status, b.created_at
+            FROM bookings b
+            JOIN users u ON b.user_id = u.id
+            JOIN halls h ON b.hall_id = h.id
+            ORDER BY b.created_at DESC
+        """)
+        bookings = cur.fetchall()
+        cur.close()
+
+        html = """
+        <html><head><style>
+        body { font-family: Arial; font-size: 12px; }
+        h1 { color: #1e3a5f; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #1e3a5f; color: white; padding: 8px; text-align: left; }
+        td { padding: 6px 8px; border-bottom: 1px solid #eee; }
+        tr:nth-child(even) { background: #f4f6fb; }
+        </style></head><body>
+        <h1>CDGI Seminar Hall Booking Report</h1>
+        <p style="text-align:center;">Generated on: """ + str(datetime.now().strftime('%d %b %Y %I:%M %p')) + """</p>
+        <table>
+        <tr><th>#</th><th>User</th><th>Department</th><th>Hall</th><th>Date</th><th>Slots</th><th>Purpose</th><th>Status</th></tr>
+        """
+        for i, b in enumerate(bookings, 1):
+            html += f"<tr><td>{i}</td><td>{b['user_name']}</td><td>{b['department']}</td><td>{b['hall_name']}</td><td>{b['event_date']}</td><td>{b['time_slots']}</td><td>{b['purpose']}</td><td>{b['status'].upper()}</td></tr>"
+        html += "</table></body></html>"
+
+        return Response(html, mimetype='text/html')
+
+    except Exception as e:
+        return f"Error: {str(e)}"
+    
 # ========================================================================================
 
 if __name__ == "__main__":
